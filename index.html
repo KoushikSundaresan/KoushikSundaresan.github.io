@@ -61,15 +61,45 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
 
 /* Hero Section - LEFT ALIGNED & DYNAMIC */
 #hero {
-    min-height: calc(80vh - var(--header-height)); /* Reduced height for better flow */
+    min-height: calc(80vh - var(--header-height));
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: left; /* Key Change: Left Align */
+    text-align: left;
     padding-top: var(--header-height);
 }
+
+/* NEW: Container for text and image */
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px; /* Space between text and image */
+}
+
+/* NEW: Image container and style */
+.hero-image-container {
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* Circular image */
+    overflow: hidden;
+    border: 3px solid var(--accent);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+    transition: transform 0.3s;
+}
+.hero-image-container:hover {
+    transform: scale(1.05);
+}
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the circle without distortion */
+}
+
+/* Existing Hero text styles adjusted for the new layout */
 #hero h1 {
-    font-size: clamp(2rem, 6vw, 4rem); /* Increased size for impact */
+    font-size: clamp(2rem, 6vw, 4rem);
     font-weight: 900;
     line-height: 1.1;
     margin-bottom: 16px;
@@ -82,8 +112,12 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
     max-width: 800px;
     margin-bottom: 32px;
 }
+.hero-cta-group {
+    display: flex; 
+    gap: 20px;
+}
 .hero-cta {
-    display: inline-block; /* Make button conform to left alignment */
+    display: inline-block; 
     background: var(--accent);
     color: var(--bg);
     padding: 12px 24px;
@@ -91,13 +125,14 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
     font-weight: 700;
     transition: 0.3s;
     font-size: 1.1rem;
+    white-space: nowrap; /* Prevents button text from wrapping */
 }
 /* FIX: Reduced box-shadow on hover to prevent text washout */
 .hero-cta:hover {
     background: var(--accent-hover);
     transform: scale(1.05);
-    box-shadow: 0 0 10px var(--accent-hover); /* Reduced shadow intensity */
-    color: var(--bg); /* Ensure text remains the dark background color for contrast */
+    box-shadow: 0 0 10px var(--accent-hover);
+    color: var(--bg);
 }
 
 /* Section Headings - LEFT ALIGNED & BOLD */
@@ -194,9 +229,33 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
     nav {margin-top: 10px; text-align: center;}
     nav a {margin: 0 8px; font-size: 13px; display: inline-block;}
     .container {padding: 16px;}
-    #hero h1 {font-size: 3rem; text-align: center;}
-    #hero p {text-align: center;}
-    .hero-cta {display: block; margin: 0 auto;}
+
+    .hero-content {
+        flex-direction: column-reverse; /* Put image above text on mobile */
+        text-align: center;
+        gap: 25px;
+    }
+    .hero-image-container {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto;
+    }
+    #hero h1 {
+        font-size: 3rem; 
+        text-align: center;
+    }
+    #hero p {
+        text-align: center;
+    }
+    .hero-cta-group {
+        flex-direction: column;
+        gap: 10px !important;
+        width: 100%;
+    }
+    .hero-cta {
+        display: block !important; 
+        margin: 0 auto !important; 
+    }
     h2{text-align: center; display: block; border-bottom: none; margin-bottom: 10px;}
     #about p { text-align: left; }
 }
@@ -219,13 +278,21 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
 <div class="container">
 
 <section id="hero">
-    <p style="font-size: 1.2rem; font-weight: 500; color: var(--accent);">B.E. Computer Science, BITS Pilani Dubai</p>
-    <h1>AI, Data, & Creative Tech Innovator</h1>
-    <p>Experienced in high-impact projects at the intersection of <b>Artificial Intelligence</b>, <b>Data Analytics</b>, and <b>Digital Multimedia</b>. Driven by a passion for technical excellence and creative leadership.</p>
-    
-    <div class="hero-cta-group" style="display: flex; gap: 20px;">
-        <a href="#projects" class="hero-cta">View Featured Work</a>
-        <a href="#contact" class="hero-cta">Connect Now</a>
+    <div class="hero-content">
+        <div>
+            <p style="font-size: 1.2rem; font-weight: 500; color: var(--accent);">B.E. Computer Science, BITS Pilani Dubai</p>
+            <h1>AI, Data, & Creative Tech Innovator.</h1>
+            <p>Experienced in high-impact projects at the intersection of <b>Artificial Intelligence</b>, <b>Data Analytics</b>, and <b>Digital Multimedia</b>. Driven by a passion for technical excellence and creative leadership.</p>
+            
+            <div class="hero-cta-group">
+                <a href="#projects" class="hero-cta">View Featured Work</a>
+                <a href="#contact" class="hero-cta">Connect Now</a>
+            </div>
+        </div>
+
+        <div class="hero-image-container">
+            <img src="/Users/koushiksundaresan/Documents/profile.jpeg" alt="Profile Picture of Koushik Sundaresan" class="hero-image">
+        </div>
     </div>
 </section>
 
@@ -245,7 +312,7 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
         <h2>Key Projects</h2>
         <div class="projects">
             <div class="card" data-title="ExposeAI: Fake News Detector" data-desc="<b>Meme-based fake news detection</b> using a multi-modal approach: <b>OCR</b> extracts text, <b>DuckDuckGo Search</b> retrieves context, and <b>Transformer Models</b> (like BERT) are used for semantic similarity analysis. The system outputs a rating of <b>True, False, or Uncertain</b>. This project showcases advanced AI and NLP capabilities."><h3 style="margin-top: 0;">ExposeAI</h3><p>Meme-based fake news detection (OCR, Transformers, NLP).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/ExposeAI" target="_blank">View GitHub</a></div>
-            <div class="card" data-title="BITS Uni Tracker" data-desc="A comprehensive <b>cross-platform application</b> designed for BITS Pilani students to manage their academic life. Features include: course tracking, attendance monitoring, grade calculation, exam scheduling, and note management. Built using the modern web stack: <b>Electron, Vite, React, and Capacitor</b> for desktop and mobile deployment."><h3>BITS Uni Tracker</h3><p>Cross-platform app for course & attendance management (React, Electron).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/BITS-uni-tracker" onclick="alert('Project details available upon request.')">Veiw Github</a></div>
+            <div class="card" data-title="BITS Uni Tracker" data-desc="A comprehensive <b>cross-platform application</b> designed for BITS Pilani students to manage their academic life. Features include: course tracking, attendance monitoring, grade calculation, exam scheduling, and note management. Built using the modern web stack: <b>Electron, Vite, React, and Capacitor</b> for desktop and mobile deployment."><h3>BITS Uni Tracker</h3><p>Cross-platform app for course & attendance management (React, Electron).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/BITS-uni-tracker" target="_blank">View GitHub</a></div>
         </div>
     </section>
     
