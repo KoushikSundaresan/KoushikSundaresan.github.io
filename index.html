@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio of Koushik Sundaresan - B.E. Computer Science student, marketing & SEO professional, events executive, AI & ML enthusiast, creative innovator.">
+<meta name="keywords" content="Koushik Sundaresan, B.E Computer Science, AI, ML, Python, Java, C++, Excel, Pandas, TensorFlow, Arduino, Raspberry Pi, GitHub, Notion, Canva, Final Cut Pro, Video Editing, SEO, Marketing, Event Management, Leadership, Problem-Solving, Collaboration">
+<title>Koushik Sundaresan | AI & Tech Innovator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+/* --- PROFESSIONAL ENHANCED CSS (LEFT-ALIGNED BIAS) --- */
+:root{
+    /* Refined Dark Mode Palette for premium feel */
+    --bg: #0C101C; 
+    --card: #1C2438;
+    --border: rgba(255, 255, 255, 0.08); 
+    --text-primary: #E2E8F0;
+    --text-muted: #94A3B8;
+    --accent: #06B6D4; /* Cyan/Teal for primary action */
+    --accent-hover: #7C3AED; /* Purple for secondary/hover accent */
+    --glass: rgba(255, 255, 255, 0.06); 
+    --hover-shadow: 0 10px 30px rgba(6, 182, 212, 0.3); 
+    --header-height: 70px;
+}
+
+/* Basic Reset & Typography */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;padding:0;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.6;
+}
+a{color:var(--accent);text-decoration:none;transition:0.3s}
+a:hover{color:var(--accent-hover)}
+
+/* Layout and Container */
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+section{padding:48px 0;margin-bottom:20px;}
+
+/* Sticky Header & Navigation */
+header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 32px;
+    background: rgba(12, 16, 28, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    height: var(--header-height);
+}
+.logo{font-weight:800;font-size:24px;color:var(--accent);letter-spacing: -0.5px;}
+nav a{margin-left:24px;font-size:15px;color:var(--text-muted);font-weight:500;transition:0.3s}
+nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);padding-bottom: 4px;}
+
+/* Hero Section - LEFT ALIGNED & DYNAMIC */
+#hero {
+    min-height: calc(80vh - var(--header-height)); /* Reduced height for better flow */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left; /* Key Change: Left Align */
+    padding-top: var(--header-height);
+}
+#hero h1 {
+    font-size: clamp(2rem, 6vw, 4rem); /* Increased size for impact */
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    text-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+}
+#hero p {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: var(--text-muted);
+    max-width: 800px;
+    margin-bottom: 32px;
+}
+.hero-cta {
+    display: inline-block; /* Make button conform to left alignment */
+    background: var(--accent);
+    color: var(--bg);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: 0.3s;
+    font-size: 1.1rem;
+}
+/* FIX: Reduced box-shadow on hover to prevent text washout */
+.hero-cta:hover {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px var(--accent-hover); /* Reduced shadow intensity */
+    color: var(--bg); /* Ensure text remains the dark background color for contrast */
+}
+
+/* Section Headings - LEFT ALIGNED & BOLD */
+h2{
+    margin-bottom:20px;
+    font-size:32px;
+    color:var(--text-primary);
+    font-weight: 700;
+    text-align: left; /* Key Change: Left Align */
+    border-bottom: 2px solid var(--accent-hover);
+    padding-bottom: 5px;
+    display: inline-block; /* To make border fit content */
+    margin-top: 0;
+}
+
+/* Card Styling (Bento Grid) */
+.card{
+    background: var(--card);
+    padding:20px;
+    border-radius:16px;
+    border: 1px solid var(--border);
+    box-shadow:0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position:relative;
+    overflow:hidden;
+    text-align: left; /* Ensure content inside cards is left-aligned */
+}
+.card:hover{box-shadow:var(--hover-shadow);transform:translateY(-5px)}
+.card h3, .card h4 {color: var(--accent); margin-top: 0; font-size: 1.3rem;}
+.card p {font-size: 0.95rem; color: var(--text-muted);}
+
+.projects,.skills-cards,.experience-cards,.education-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+
+/* Experience & Education Specifics */
+.experience-cards .card, .education-card {
+    border-left: 5px solid var(--accent);
+    padding-left: 20px;
+}
+.education-card h4 {color: var(--accent-hover);}
+
+/* Contact Section - Center Align for CTA Group */
+#contact h2 { text-align: center; display: block; }
+.social-links {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    /* Styles for the new icon grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+    gap: 15px; /* Spacing between icons */
+}
+.social-links a{
+    /* New styles for small, circular icon buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Fixed size for circular button */
+    height: 60px; 
+    padding: 0; 
+    border-radius: 50%; /* Make them circular */
+    background: var(--glass);
+    transition: 0.3s;
+    border: 1px solid var(--border);
+    margin: 0 auto; /* Center the icon element within its grid cell */
+}
+.social-links a:hover{
+    background: var(--card);
+    transform: scale(1.1); /* Subtle zoom effect */
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+.social-links i { 
+    /* Style for the actual icon element (Font Awesome) */
+    font-size: 24px;
+    color: var(--accent); /* Color the icon itself */
+    line-height: 1;
+}
+
+/* Footer */
+footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;padding:20px 0;border-top: 1px solid var(--border);}
+
+/* Modal */
+.modal{display:none;position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;padding:24px}
+.modal-content{background:var(--card);padding:30px;border-radius:16px;max-width:800px;width:90%;position:relative;overflow-y:auto;max-height:90vh;border: 1px solid var(--border);}
+.modal-content h3 {font-size: 2rem; margin-bottom: 15px; color: var(--accent);}
+.close{position:absolute;top:16px;right:16px;font-size:36px;color:var(--text-muted);cursor:pointer;transition:0.3s;line-height: 1;}
+.close:hover {color: var(--accent);}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 32px 10px;
+    }
+    nav {margin-top: 10px; text-align: center;}
+    nav a {margin: 0 8px; font-size: 13px; display: inline-block;}
+    .container {padding: 16px;}
+    #hero h1 {font-size: 3rem; text-align: center;}
+    #hero p {text-align: center;}
+    .hero-cta {display: block; margin: 0 auto;}
+    h2{text-align: center; display: block; border-bottom: none; margin-bottom: 10px;}
+    #about p { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Koushik Sundaresan.</div>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#skills">Skills</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<div class="container">
+
+<section id="hero">
+    <p style="font-size: 1.2rem; font-weight: 500; color: var(--accent);">B.E. Computer Science, BITS Pilani Dubai</p>
+    <h1>AI, Data, & Creative Tech Innovator</h1>
+    <p>Experienced in high-impact projects at the intersection of <b>Artificial Intelligence</b>, <b>Data Analytics</b>, and <b>Digital Multimedia</b>. Driven by a passion for technical excellence and creative leadership.</p>
+    
+    <div class="hero-cta-group" style="display: flex; gap: 20px;">
+        <a href="#projects" class="hero-cta">View Featured Work</a>
+        <a href="#contact" class="hero-cta">Connect Now</a>
+    </div>
+</section>
+
+    <section id="about">
+        <h2>About Koushik</h2>
+        <p style="font-size: 1.1rem; color: var(--text-primary);">
+            I am a <b>Creative and technically versatile Computer Science undergraduate</b> with a proven track record in modern tech stacks including <b>AI, ML, and Data Analytics</b>. My unique skill set is bolstered by practical experience in <b>digital marketing, SEO, video editing, and leading high-impact projects</b>. I possess strong <b>problem-solving, collaboration, and leadership</b> skills, driven by a passion to <b>drive innovation</b> and deliver results.
+        </p>
+        <p style="margin-top: 15px; color: var(--text-muted);">
+            <b>Location</b> Al Qusais 2, Dubai, UAE | <b>Email:</b> <a href="mailto:f20230129@dubai.bits-pilani.ac.in">f20230129@dubai.bits-pilani.ac.in</a> | <b>Phone:</b> +971-561298595
+        </p>
+    </section>
+
+    <hr style="border: 0; height: 1px; background: var(--border);">
+
+    <section id="projects">
+        <h2>Key Projects</h2>
+        <div class="projects">
+            <div class="card" data-title="ExposeAI: Fake News Detector" data-desc="<b>Meme-based fake news detection</b> using a multi-modal approach: <b>OCR</b> extracts text, <b>DuckDuckGo Search</b> retrieves context, and <b>Transformer Models</b> (like BERT) are used for semantic similarity analysis. The system outputs a rating of <b>True, False, or Uncertain</b>. This project showcases advanced AI and NLP capabilities."><h3 style="margin-top: 0;">ExposeAI</h3><p>Meme-based fake news detection (OCR, Transformers, NLP).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/ExposeAI" target="_blank">View GitHub</a></div>
+            <div class="card" data-title="BITS Uni Tracker" data-desc="A comprehensive <b>cross-platform application</b> designed for BITS Pilani students to manage their academic life. Features include: course tracking, attendance monitoring, grade calculation, exam scheduling, and note management. Built using the modern web stack: <b>Electron, Vite, React, and Capacitor</b> for desktop and mobile deployment."><h3>BITS Uni Tracker</h3><p>Cross-platform app for course & attendance management (React, Electron).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/BITS-uni-tracker" onclick="alert('Project details available upon request.')">Veiw Github</a></div>
+        </div>
+    </section>
+    
+    <hr style="border: 0; height: 1px; background: var(--border);">
+
+    <section id="experience">
+        <h2>Professional Experience</h2>
+        <div class="experience-cards">
+            <div class="card"><h4>Personal Assistant to Dean, BITS Pilani Dubai</h4><p class="role-duration">Feb 2025 – Present</p><p>Supported Dean with administrative tasks, coordinated high-profile college events, and contributed to academic initiatives.</p></div>
+            <div class="card"><h4>Events Executive, IEEE BPDC</h4><p class="role-duration">Sept 2025 – Present</p><p>Led the planning and execution of technical workshops, hackathons, and professional development events.</p></div>
+            <div class="card"><h4>Marketing Executive, IEEE BPDC</h4><p class="role-duration">Oct 2024 – Sept 2025</p><p>Managed digital marketing strategy, social media campaigns, and video editing for event promotions.</p></div>
+            <div class="card"><h4>Founder & President, The Critique Club</h4><p class="role-duration">2021 – 2023</p><p>Founded and led a literary club, organizing workshops, reading sessions, demonstrating leadership and coordination.</p></div>
+        </div>
+    </section>
+    
+    <hr style="border: 0; height: 1px; background: var(--border);">
+
+    <section id="skills">
+        <h2>Skills & Tools</h2>
+        <div class="skills-cards">
+            <div class="card"><h4>AI/ML & Data</h4><p><b>Python</b>, <b>TensorFlow</b>, Scikit-learn, <b>Pandas</b>, Excel, SQL</p></div>
+            <div class="card"><h4>Programming & IoT</h4><p><b>Java</b>, <b>C++</b>, <b>Python</b>, Arduino, Raspberry Pi, GitHub</p></div>
+            <div class="card"><h4>Creative & Multimedia</h4><p><b>Final Cut Pro</b>, DaVinci Resolve, Canva, Capcut, Filmora, Video Editing</p></div>
+            <div class="card"><h4>Marketing & Strategy</h4><p><b>Digital Marketing</b>, <b>SEO</b>, Social Media Management, Notion</p></div>
+            <div class="card"><h4>Soft Skills</h4><p><b>Leadership</b>, <b>Problem-Solving</b>, Collaboration, Work Ethic, Event Management</p></div>
+        </div>
+    </section>
+    
+    <hr style="border: 0; height: 1px; background: var(--border);">
+
+    <section id="education">
+        <h2>Education</h2>
+        <div class="education-cards">
+            <div class="card education-card">
+                <h4>B.E Computer Science</h4>
+                <p style="font-size: 0.95rem; color: var(--text-muted);">BITS Pilani Dubai | 2023 – Present</p>
+                <p>Current GPA: <b>7.09 / 10</b></p>
+            </div>
+            <div class="card education-card">
+                <h4>High School</h4>
+                <p style="font-size: 0.95rem; color: var(--text-muted);">Our Own High School Al Warqa’a | 2020 – 2022</p>
+                <p>Aggregate: <b>77%</b></p>
+            </div>
+        </div>
+    </section>
+    
+    <hr style="border: 0; height: 1px; background: var(--border);">
+
+    <section id="contact">
+        <h2>Connect With Me</h2>
+        <p style="text-align: center; max-width: 600px; margin: 0 auto 30px; color: var(--text-muted);">
+            I'm always open to discussing new tech projects, collaborations, and career opportunities. Reach out via any of the icons below.
+        </p>
+        <div class="social-links">
+            <a href="mailto:f20230129@dubai.bits-pilani.ac.in" aria-label="Email" target="_blank">
+                <i class="fa-solid fa-envelope"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/koushiksundaresan" aria-label="LinkedIn" target="_blank">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/KoushikSundaresan" aria-label="GitHub" target="_blank">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="https://calendar.app.google/DKb465wMSdPEQNX28" aria-label="Google Meet" target="_blank">
+                <i class="fa-solid fa-video"></i>
+            </a>
+            <a href="https://x.com/KoushikSunda" aria-label="Twitter" target="_blank">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <a href="https://www.instagram.com/shiva.yaaaaa?utm_source=qr&igsh=Mjh1c2lzMDhxNTd1" aria-label="Instagram" target="_blank">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        &copy; <span id="year"></span> Koushik Sundaresan. Designed for <b>professional impact</b>.
+    </footer>
+</div>
+
+<div class="modal" id="projectModal">
+    <div class="modal-content">
+        <span class="close" id="modalClose">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalText"></p>
+        <div id="modalCTA"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Modal functionality
+    const modal = document.getElementById('projectModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    const modalCTA = document.getElementById('modalCTA');
+    const closeBtn = document.getElementById('modalClose');
+
+    // Attach event listeners to project cards
+    document.querySelectorAll('#projects .card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Check if the click was on the button, if so, let the button's action execute and don't open modal
+            if (e.target.closest('.hero-cta')) {
+                return;
+            }
+
+            const title = card.getAttribute('data-title') || card.querySelector('h3').textContent;
+            const desc = card.getAttribute('data-desc');
+            const ctaElement = card.querySelector('.hero-cta');
+            
+            modalTitle.textContent = title;
+            modalText.innerHTML = desc; 
+
+            modalCTA.innerHTML = '';
+            if (ctaElement) {
+                const clonedCTA = ctaElement.cloneNode(true);
+                clonedCTA.style.marginTop = '20px';
+                modalCTA.appendChild(clonedCTA);
+            }
+            
+            modal.style.display = 'flex';
+        });
+    });
+
+    closeBtn.onclick = () => { modal.style.display = 'none'; };
+    window.onclick = e => { if (e.target == modal) { modal.style.display = 'none'; } };
+</script>
+</body>
+</html>
