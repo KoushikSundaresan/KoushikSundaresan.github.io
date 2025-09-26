@@ -1,13 +1,1 @@
-# Site settings
-theme: jekyll-theme-hacker
-title: "Koushik Sundaresan"
-description: "Engineering student | Aspiring innovator | Showcasing my projects, skills, and CV"
 
-# Optional settings
-author: "Koushik Sundaresan"
-email: "your.email@example.com"
-github_username: "your-github-username"
-linkedin: "https://www.linkedin.com/in/your-linkedin-id"
-
-# Build settings
-markdown: kramdown
