@@ -99,6 +99,21 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
     height: 100%;
     object-fit: cover; /* Ensures the image covers the circle without distortion */
 }
+.bar {
+  width: 100%;
+  height: 8px;
+  background: var(--glass);
+  border-radius: 6px;
+  margin: 4px 0 12px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 6px;
+  transition: width 1s ease-in-out;
+}
+
 
 /* Existing Hero text styles adjusted for the new layout */
 #hero h1 {
@@ -328,21 +343,84 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
             <div class="card"><h4>Events Executive, IEEE BPDC</h4><p class="role-duration">Sept 2025 – Present</p><p>Led the planning and execution of technical workshops, hackathons, and professional development events.</p></div>
             <div class="card"><h4>Marketing Executive, IEEE BPDC</h4><p class="role-duration">Oct 2024 – Sept 2025</p><p>Managed digital marketing strategy, social media campaigns, and video editing for event promotions.</p></div>
             <div class="card"><h4>Founder & President, The Critique Club</h4><p class="role-duration">2021 – 2023</p><p>Founded and led a literary club, organizing workshops, reading sessions, demonstrating leadership and coordination.</p></div>
-        </div>
+            <div class="card"><h4>AI/ML Intern, ShunyaEkai x Medhub</h4><p>Jun 2024 – Aug 2024</p><p>Worked on healthcare-focused AI solutions, contributing to model development, data preprocessing, and deployment strategies. Collaborated with cross-functional teams to integrate machine learning insights into real-world healthcare applications, enhancing efficiency and accuracy.</p></div>
+            </div>
     </section>
     
     <hr style="border: 0; height: 1px; background: var(--border);">
 
-    <section id="skills">
-        <h2>Skills & Tools</h2>
-        <div class="skills-cards">
-            <div class="card"><h4>AI/ML & Data</h4><p><b>Python</b>, <b>TensorFlow</b>, Scikit-learn, <b>Pandas</b>, Excel, SQL</p></div>
-            <div class="card"><h4>Programming & IoT</h4><p><b>Java</b>, <b>C++</b>, <b>Python</b>, Arduino, Raspberry Pi, GitHub</p></div>
-            <div class="card"><h4>Creative & Multimedia</h4><p><b>Final Cut Pro</b>, DaVinci Resolve, Canva, Capcut, Filmora, Video Editing</p></div>
-            <div class="card"><h4>Marketing & Strategy</h4><p><b>Digital Marketing</b>, <b>SEO</b>, Social Media Management, Notion</p></div>
-            <div class="card"><h4>Soft Skills</h4><p><b>Leadership</b>, <b>Problem-Solving</b>, Collaboration, Work Ethic, Event Management</p></div>
-        </div>
-    </section>
+<section id="skills">
+  <h2>Skills & Tools</h2>
+  <div class="skills-cards">
+    
+    <div class="card">
+      <h4>AI/ML & Data</h4>
+      <p>Python</p>
+      <div class="bar"><div class="fill" style="width: 90%"></div></div>
+      <p>TensorFlow</p>
+      <div class="bar"><div class="fill" style="width: 80%"></div></div>
+      <p>Scikit-learn</p>
+      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+      <p>Pandas</p>
+      <div class="bar"><div class="fill" style="width: 85%"></div></div>
+      <p>Excel / SQL</p>
+      <div class="bar"><div class="fill" style="width: 70%"></div></div>
+    </div>
+
+    <div class="card">
+      <h4>Programming & IoT</h4>
+      <p>Java</p>
+      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+      <p>C++</p>
+      <div class="bar"><div class="fill" style="width: 70%"></div></div>
+      <p>Python</p>
+      <div class="bar"><div class="fill" style="width: 90%"></div></div>
+      <p>Arduino / Raspberry Pi</p>
+      <div class="bar"><div class="fill" style="width: 65%"></div></div>
+      <p>GitHub</p>
+      <div class="bar"><div class="fill" style="width: 80%"></div></div>
+    </div>
+
+    <div class="card">
+      <h4>Creative & Multimedia</h4>
+      <p>Final Cut Pro</p>
+      <div class="bar"><div class="fill" style="width: 85%"></div></div>
+      <p>DaVinci Resolve</p>
+      <div class="bar"><div class="fill" style="width: 80%"></div></div>
+      <p>Canva / Capcut / Filmora</p>
+      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+      <p>Video Editing (general)</p>
+      <div class="bar"><div class="fill" style="width: 90%"></div></div>
+    </div>
+
+    <div class="card">
+      <h4>Marketing & Strategy</h4>
+      <p>Digital Marketing</p>
+      <div class="bar"><div class="fill" style="width: 80%"></div></div>
+      <p>SEO</p>
+      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+      <p>Social Media Management</p>
+      <div class="bar"><div class="fill" style="width: 85%"></div></div>
+      <p>Notion / Productivity Tools</p>
+      <div class="bar"><div class="fill" style="width: 70%"></div></div>
+    </div>
+
+    <div class="card">
+      <h4>Soft Skills</h4>
+      <p>Leadership</p>
+      <div class="bar"><div class="fill" style="width: 90%"></div></div>
+      <p>Problem-Solving</p>
+      <div class="bar"><div class="fill" style="width: 85%"></div></div>
+      <p>Collaboration</p>
+      <div class="bar"><div class="fill" style="width: 80%"></div></div>
+      <p>Work Ethic</p>
+      <div class="bar"><div class="fill" style="width: 95%"></div></div>
+      <p>Event Management</p>
+      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+    </div>
+  </div>
+</section>
+
     
     <hr style="border: 0; height: 1px; background: var(--border);">
 
@@ -361,7 +439,31 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
             </div>
         </div>
     </section>
+    <section id="beyond-cs">
+  <h2>Beyond Computer Science</h2>
+  <div class="skills-cards">
     
+    <div class="card">
+      <h4>Finance & Economics</h4>
+      <p><b>Fundamentals of Financial Accounting</b>, <b>Financial Management</b>, <b>Principles of Economics</b></p>
+      <p><i>Impact:</i> Strengthened my ability to understand resource allocation, budgeting, and strategic decision-making — skills that complement my technical expertise by enabling data-driven business thinking.</p>
+    </div>
+    
+    <div class="card">
+      <h4>Environmental Studies</h4>
+      <p><b>Environmental Studies</b>, <b>Environmental Development and Climate Change</b></p>
+      <p><i>Impact:</i> Sharpened my awareness of sustainability and the role of technology in tackling climate challenges, shaping me into a more socially responsible engineer.</p>
+    </div>
+    
+    <div class="card">
+      <h4>Humanities & Critical Thinking</h4>
+      <p><b>Literary Criticism</b></p>
+      <p><i>Impact:</i> Enhanced my analytical and communication skills, helping me approach problems with creativity, empathy, and cultural awareness.</p>
+    </div>
+
+  </div>
+</section>
+
     <hr style="border: 0; height: 1px; background: var(--border);">
 
     <section id="contact">
