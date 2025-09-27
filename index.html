@@ -99,21 +99,39 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
     height: 100%;
     object-fit: cover; /* Ensures the image covers the circle without distortion */
 }
-.bar {
-  width: 100%;
-  height: 8px;
-  background: var(--glass);
-  border-radius: 6px;
-  margin: 4px 0 12px;
-  overflow: hidden;
+
+
+/* --- SKILL BAR CSS ADJUSTMENTS for 5 SEPARATE SEGMENTS --- */
+
+/* The new container for the 5 segments */
+.segment-container {
+    display: flex;
+    gap: 6px; /* Space between the individual bars */
+    width: 100%;
+    margin: 4px 0 6px; /* ADJUSTED: Reduced bottom margin from 12px to 6px */
 }
-.fill {
-  height: 100%;
-  /* SKILL BAR FIX: Now uses the defined --accent2 variable */
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 6px;
-  transition: width 1s ease-in-out;
+
+/* The style for each individual bar (segment) */
+.segment {
+    flex: 1; /* Makes all 5 segments equal width */
+    height: 10px;
+    border-radius: 5px; /* Fully rounded ends */
+    background-color: transparent;
+    border: 1px solid var(--text-muted); /* Empty state outline */
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
 }
+
+/* Classes to fill (color) the segments */
+.filled {
+    /* Use the primary accent color for the filled segment */
+    background: var(--accent); 
+    border-color: var(--accent); /* Hide the outline when filled */
+}
+
+/* The rating classes just control how many segments get the 'filled' class */
+/* HTML structure handles the number of filled segments */
+
+/* --- END OF SKILL BAR CSS ADJUSTMENTS --- */
 
 
 /* Existing Hero text styles adjusted for the new layout */
@@ -170,7 +188,8 @@ h2{
 /* Card Styling (Bento Grid) */
 .card{
     background: var(--card);
-    padding:20px;
+    /* ADJUSTED: Reduced top/bottom padding to make card shorter */
+    padding:14px 20px; 
     border-radius:16px;
     border: 1px solid var(--border);
     box-shadow:0 4px 15px rgba(0,0,0,0.4);
@@ -183,7 +202,8 @@ h2{
 .card h3, .card h4 {color: var(--accent); margin-top: 0; font-size: 1.3rem;}
 .card p {font-size: 0.95rem; color: var(--text-muted);}
 
-.projects,.skills-cards,.experience-cards,.education-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+/* Resetting width constraint for the card grid to maintain original width */
+.projects,.skills-cards,.experience-cards,.education-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px} 
 
 /* Experience & Education Specifics */
 .experience-cards .card, .education-card {
@@ -330,7 +350,7 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
     <section id="projects">
         <h2>Key Projects</h2>
         <div class="projects">
-            <div class="card" data-title="ExposeAI: Fake News Detector" data-desc="<b>Meme-based fake news detection</b> using a multi-modal approach: <b>OCR</b> extracts text, <b>DuckDuckGo Search</b> retrieves context, and <b>Transformer Models</b> (like BERT) are used for semantic similarity analysis. The system outputs a rating of <b>True, False, or Uncertain</b>. This project showcases advanced AI and NLP capabilities."><h3 style="margin-top: 0;">ExposeAI</h3><p>Meme-based fake news detection (OCR, Transformers, NLP).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/ExposeAI" target="_blank">View GitHub</a></div>
+            <div class="card" data-title="ExposeAI: Fake News Detector" data-desc="<b>Meme-based fake news detection</b> using a multi-modal approach: <b>OCR</b> extracts text, <b>DuckDuckGo Search</b> retrieves context, and <b>Transformer Models</b> (like BERT) are used for semantic similarity analysis. The system outputs a rating of <b>True, False, or Uncertain</b>. The system outputs a rating of <b>True, False, or Uncertain</b>. This project showcases advanced AI and NLP capabilities."><h3 style="margin-top: 0;">ExposeAI</h3><p>Meme-based fake news detection (OCR, Transformers, NLP).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/ExposeAI" target="_blank">View GitHub</a></div>
             <div class="card" data-title="BITS Uni Tracker" data-desc="A comprehensive <b>cross-platform application</b> designed for BITS Pilani students to manage their academic life. Features include: course tracking, attendance monitoring, grade calculation, exam scheduling, and note management. Built using the modern web stack: <b>Electron, Vite, React, and Capacitor</b> for desktop and mobile deployment."><h3>BITS Uni Tracker</h3><p>Cross-platform app for course & attendance management (React, Electron).</p><a class="btn hero-cta" style="margin-top: 10px; font-size: 1rem; padding: 8px 16px; background: var(--accent-hover);" href="https://github.com/KoushikSundaresan/BITS-uni-tracker" target="_blank">View GitHub</a></div>
         </div>
     </section>
@@ -357,67 +377,205 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
         <div class="card">
             <h4>AI/ML & Data</h4>
             <p>Python</p>
-            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>TensorFlow</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>Scikit-learn</p>
-            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
             <p>Pandas</p>
-            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
             <p>Excel / SQL</p>
-            <div class="bar"><div class="fill" style="width: 70%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
         </div>
 
         <div class="card">
             <h4>Programming & IoT</h4>
             <p>Python</p>
-            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>Arduino / Raspberry Pi</p>
-            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>GitHub</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>Java</p>
-            <div class="bar"><div class="fill" style="width: 30%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
             <p>C++</p>
-            <div class="bar"><div class="fill" style="width: 20%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
         </div>
 
         <div class="card">
             <h4>Creative & Multimedia</h4>
             <p>Final Cut Pro</p>
-            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>DaVinci Resolve</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>Canva</p>
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>Capcut & Filmora</p>
-            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
         </div>
 
         <div class="card">
             <h4>Marketing & Strategy</h4>
             <p>Digital Marketing</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
             <p>SEO</p>
-            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
             <p>Social Media Management</p>
-            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>Notion / Productivity Tools</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
         </div>
 
         <div class="card">
             <h4>Soft Skills</h4>
             <p>Leadership</p>
-            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>Problem-Solving</p>
-            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>Collaboration</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
             <p>Work Ethic</p>
-            <div class="bar"><div class="fill" style="width: 95%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+            </div>
             <p>Event Management</p>
-            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <div class="segment-container">
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment filled"></div>
+                <div class="segment"></div>
+            </div>
         </div>
     </div>
 </section>
@@ -437,27 +595,26 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
                 <p style="font-size: 0.95rem; color: var(--text-muted);">Our Own High School Al Warqa’a | 2020 – 2022</p>
             </div>
         </div>
-    </section>
-    <section id="beyond-cs">
-    <h2>Beyond Computer Science</h2>
+        </section>
+        <section id="beyond-cs">
+    <h2>Interests Beyond Code</h2>
     <div class="skills-cards">
         
         <div class="card">
-            <h4>Finance & Economics</h4>
-            <p><b>Fundamentals of Financial Accounting</b>, <b>Financial Management</b>, <b>Principles of Economics</b></p>
-            <p><i>Impact:</i> Strengthened my ability to understand resource allocation, budgeting, and strategic decision-making — skills that complement my technical expertise by enabling data-driven business thinking.</p>
+            <h4>Finance & Global Markets</h4>
+            <p style="margin-bottom: 8px;">I actively follow <b>market dynamics</b>, <b>macroeconomics</b>, and <b>financial modeling</b>. I'm particularly interested in how <b>algorithmic trading</b> and <b>predictive analytics</b> reshape investment strategies.</p>
+            <p style="color: var(--text-primary); font-style: italic;">My Angle: This study enhances my data analysis by providing a vital <b>strategic business perspective</b> on resource allocation and generating tangible value from technical projects.</p></div>
+        
+        <div class="card">
+            <h4>Sustainability & Climate Tech</h4>
+            <p style="margin-bottom: 8px;">My passion lies in understanding <b>environmental systems</b> and the role of <b>AI/IoT in sustainability</b>. I explore <b>smart city development</b> and how data can drive energy-efficient solutions.</p>
+            <p style="color: var(--text-primary); font-style: italic;">My Angle: This focus ensures my technical work is <b>socially relevant</b>. It inspires me to develop solutions that tackle real-world challenges like resource optimization and climate modeling.</p>
         </div>
         
         <div class="card">
-            <h4>Environmental Studies</h4>
-            <p><b>Environmental Studies</b>, <b>Environmental Development and Climate Change</b></p>
-            <p><i>Impact:</i> Sharpened my awareness of sustainability and the role of technology in tackling climate challenges, shaping me into a more socially responsible engineer.</p>
-        </div>
-        
-        <div class="card">
-            <h4>Humanities & Critical Thinking</h4>
-            <p><b>Literary Criticism</b></p>
-            <p><i>Impact:</i> Enhanced my analytical and communication skills, helping me approach problems with creativity, empathy, and cultural awareness.</p>
+            <h4>Culture & Critical Thought</h4>
+            <p style="margin-bottom: 8px;">I dedicate time to <b>literary criticism</b>, <b>global history</b>, and understanding <b>cultural trends</b>. This is where I develop my appreciation for complex human narratives and different worldviews.</p>
+            <p style="color: var(--text-primary); font-style: italic;">My Angle: By engaging with the humanities, I significantly <b>enhance my empathy and communication</b>. This allows me to better understand user needs and articulate complex technical ideas clearly to non-technical audiences.</p>
         </div>
 
     </div>
@@ -468,7 +625,7 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
     <section id="contact">
         <h2>Connect With Me</h2>
         <p style="text-align: center; max-width: 600px; margin: 0 auto 30px; color: var(--text-muted);">
-            I'm always open to discussing new tech projects, collaborations, and career opportunities. Reach out via any of the icons below.
+            I'm always open to discussing new tech projects, collaborations, and career opportunities.<br>Reach out via any of the Channels below.
         </p>
         <div class="social-links">
             <a href="mailto:f20230129@dubai.bits-pilani.ac.in" aria-label="Email" target="_blank">
