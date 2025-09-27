@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -21,6 +20,7 @@
     --text-primary: #E2E8F0;
     --text-muted: #94A3B8;
     --accent: #06B6D4; /* Cyan/Teal for primary action */
+    --accent2: #7C3AED; /* SKILL BAR FIX: Defined the second accent color for the gradient */
     --accent-hover: #7C3AED; /* Purple for secondary/hover accent */
     --glass: rgba(255, 255, 255, 0.06); 
     --hover-shadow: 0 10px 30px rgba(6, 182, 212, 0.3); 
@@ -109,6 +109,7 @@ nav a:hover{color:var(--text-primary);border-bottom: 2px solid var(--accent);pad
 }
 .fill {
   height: 100%;
+  /* SKILL BAR FIX: Now uses the defined --accent2 variable */
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   border-radius: 6px;
   transition: width 1s ease-in-out;
@@ -350,75 +351,75 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
     <hr style="border: 0; height: 1px; background: var(--border);">
 
 <section id="skills">
-  <h2>Skills & Tools</h2>
-  <div class="skills-cards">
-    
-    <div class="card">
-      <h4>AI/ML & Data</h4>
-      <p>Python</p>
-      <div class="bar"><div class="fill" style="width: 90%"></div></div>
-      <p>TensorFlow</p>
-      <div class="bar"><div class="fill" style="width: 80%"></div></div>
-      <p>Scikit-learn</p>
-      <div class="bar"><div class="fill" style="width: 75%"></div></div>
-      <p>Pandas</p>
-      <div class="bar"><div class="fill" style="width: 85%"></div></div>
-      <p>Excel / SQL</p>
-      <div class="bar"><div class="fill" style="width: 70%"></div></div>
-    </div>
+    <h2>Skills & Tools</h2>
+    <div class="skills-cards">
+        
+        <div class="card">
+            <h4>AI/ML & Data</h4>
+            <p>Python</p>
+            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <p>TensorFlow</p>
+            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <p>Scikit-learn</p>
+            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <p>Pandas</p>
+            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <p>Excel / SQL</p>
+            <div class="bar"><div class="fill" style="width: 70%"></div></div>
+        </div>
 
-    <div class="card">
-      <h4>Programming & IoT</h4>
-      <p>Java</p>
-      <div class="bar"><div class="fill" style="width: 75%"></div></div>
-      <p>C++</p>
-      <div class="bar"><div class="fill" style="width: 70%"></div></div>
-      <p>Python</p>
-      <div class="bar"><div class="fill" style="width: 90%"></div></div>
-      <p>Arduino / Raspberry Pi</p>
-      <div class="bar"><div class="fill" style="width: 65%"></div></div>
-      <p>GitHub</p>
-      <div class="bar"><div class="fill" style="width: 80%"></div></div>
-    </div>
+        <div class="card">
+            <h4>Programming & IoT</h4>
+            <p>Java</p>
+            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <p>C++</p>
+            <div class="bar"><div class="fill" style="width: 70%"></div></div>
+            <p>Python</p>
+            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <p>Arduino / Raspberry Pi</p>
+            <div class="bar"><div class="fill" style="width: 65%"></div></div>
+            <p>GitHub</p>
+            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+        </div>
 
-    <div class="card">
-      <h4>Creative & Multimedia</h4>
-      <p>Final Cut Pro</p>
-      <div class="bar"><div class="fill" style="width: 85%"></div></div>
-      <p>DaVinci Resolve</p>
-      <div class="bar"><div class="fill" style="width: 80%"></div></div>
-      <p>Canva / Capcut / Filmora</p>
-      <div class="bar"><div class="fill" style="width: 75%"></div></div>
-      <p>Video Editing (general)</p>
-      <div class="bar"><div class="fill" style="width: 90%"></div></div>
-    </div>
+        <div class="card">
+            <h4>Creative & Multimedia</h4>
+            <p>Final Cut Pro</p>
+            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <p>DaVinci Resolve</p>
+            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <p>Canva / Capcut / Filmora</p>
+            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <p>Video Editing (general)</p>
+            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+        </div>
 
-    <div class="card">
-      <h4>Marketing & Strategy</h4>
-      <p>Digital Marketing</p>
-      <div class="bar"><div class="fill" style="width: 80%"></div></div>
-      <p>SEO</p>
-      <div class="bar"><div class="fill" style="width: 75%"></div></div>
-      <p>Social Media Management</p>
-      <div class="bar"><div class="fill" style="width: 85%"></div></div>
-      <p>Notion / Productivity Tools</p>
-      <div class="bar"><div class="fill" style="width: 70%"></div></div>
-    </div>
+        <div class="card">
+            <h4>Marketing & Strategy</h4>
+            <p>Digital Marketing</p>
+            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <p>SEO</p>
+            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+            <p>Social Media Management</p>
+            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <p>Notion / Productivity Tools</p>
+            <div class="bar"><div class="fill" style="width: 70%"></div></div>
+        </div>
 
-    <div class="card">
-      <h4>Soft Skills</h4>
-      <p>Leadership</p>
-      <div class="bar"><div class="fill" style="width: 90%"></div></div>
-      <p>Problem-Solving</p>
-      <div class="bar"><div class="fill" style="width: 85%"></div></div>
-      <p>Collaboration</p>
-      <div class="bar"><div class="fill" style="width: 80%"></div></div>
-      <p>Work Ethic</p>
-      <div class="bar"><div class="fill" style="width: 95%"></div></div>
-      <p>Event Management</p>
-      <div class="bar"><div class="fill" style="width: 75%"></div></div>
+        <div class="card">
+            <h4>Soft Skills</h4>
+            <p>Leadership</p>
+            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+            <p>Problem-Solving</p>
+            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <p>Collaboration</p>
+            <div class="bar"><div class="fill" style="width: 80%"></div></div>
+            <p>Work Ethic</p>
+            <div class="bar"><div class="fill" style="width: 95%"></div></div>
+            <p>Event Management</p>
+            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+        </div>
     </div>
-  </div>
 </section>
 
     
@@ -440,28 +441,28 @@ footer{text-align:center;color:var(--text-muted);font-size:14px;margin-top:40px;
         </div>
     </section>
     <section id="beyond-cs">
-  <h2>Beyond Computer Science</h2>
-  <div class="skills-cards">
-    
-    <div class="card">
-      <h4>Finance & Economics</h4>
-      <p><b>Fundamentals of Financial Accounting</b>, <b>Financial Management</b>, <b>Principles of Economics</b></p>
-      <p><i>Impact:</i> Strengthened my ability to understand resource allocation, budgeting, and strategic decision-making — skills that complement my technical expertise by enabling data-driven business thinking.</p>
-    </div>
-    
-    <div class="card">
-      <h4>Environmental Studies</h4>
-      <p><b>Environmental Studies</b>, <b>Environmental Development and Climate Change</b></p>
-      <p><i>Impact:</i> Sharpened my awareness of sustainability and the role of technology in tackling climate challenges, shaping me into a more socially responsible engineer.</p>
-    </div>
-    
-    <div class="card">
-      <h4>Humanities & Critical Thinking</h4>
-      <p><b>Literary Criticism</b></p>
-      <p><i>Impact:</i> Enhanced my analytical and communication skills, helping me approach problems with creativity, empathy, and cultural awareness.</p>
-    </div>
+    <h2>Beyond Computer Science</h2>
+    <div class="skills-cards">
+        
+        <div class="card">
+            <h4>Finance & Economics</h4>
+            <p><b>Fundamentals of Financial Accounting</b>, <b>Financial Management</b>, <b>Principles of Economics</b></p>
+            <p><i>Impact:</i> Strengthened my ability to understand resource allocation, budgeting, and strategic decision-making — skills that complement my technical expertise by enabling data-driven business thinking.</p>
+        </div>
+        
+        <div class="card">
+            <h4>Environmental Studies</h4>
+            <p><b>Environmental Studies</b>, <b>Environmental Development and Climate Change</b></p>
+            <p><i>Impact:</i> Sharpened my awareness of sustainability and the role of technology in tackling climate challenges, shaping me into a more socially responsible engineer.</p>
+        </div>
+        
+        <div class="card">
+            <h4>Humanities & Critical Thinking</h4>
+            <p><b>Literary Criticism</b></p>
+            <p><i>Impact:</i> Enhanced my analytical and communication skills, helping me approach problems with creativity, empathy, and cultural awareness.</p>
+        </div>
 
-  </div>
+    </div>
 </section>
 
     <hr style="border: 0; height: 1px; background: var(--border);">
