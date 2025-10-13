@@ -1,96 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Proliferate?</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-  body {
-    margin: 0;
-    height: 100vh;
-    background: radial-gradient(circle at center, #000010 0%, #000000 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Share Tech Mono', monospace;
-    overflow: hidden;
-    color: #00f0ff;
+  :root{
+    --neon: #00f0ff;
+    --bg1: #000010;
+    --bg2: #000000;
   }
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 50px;
-    text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #00f0ff;
+  html,body{height:100%;margin:0}
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    font-family:'Share Tech Mono',monospace;
+    background:radial-gradient(circle at center,var(--bg1) 0%,var(--bg2) 100%);
+    color:var(--neon);
+    overflow:hidden;
   }
 
-  .heart-container {
-    width: 150px;
-    height: 150px;
-    position: relative;
+  h1{
+    font-size:3rem;
+    margin-bottom:48px;
+    color:var(--neon);
+    text-shadow:0 0 10px var(--neon),0 0 20px var(--neon),0 0 30px var(--neon);
+    user-select:none;
   }
 
-  svg#heart {
-    width: 100%;
-    height: 100%;
-    fill: #00f0ff;
-    filter: drop-shadow(0 0 10px #00f0ff) drop-shadow(0 0 20px #00f0ff);
-    opacity: 0.2;
-    transition: opacity 0.1s ease-out;
-  }
+  .heart-wrap{width:180px;height:180px;display:flex;align-items:center;justify-content:center}
+  svg#heart{width:100%;height:100%;fill:var(--neon);filter:drop-shadow(0 0 10px var(--neon)) drop-shadow(0 0 20px var(--neon));opacity:0.2;transition:opacity 0.06s linear;user-select:none;pointer-events:none}
 
-  button {
-    margin-top: 50px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    background: #000022;
-    border: 1px solid #00f0ff;
-    color: #00f0ff;
-    cursor: pointer;
-    text-shadow: 0 0 5px #00f0ff;
+  #startBtn{
+    margin-top:48px;
+    background:#000022;
+    color:var(--neon);
+    border:1px solid var(--neon);
+    padding:10px 18px;
+    font-family:'Share Tech Mono',monospace;
+    cursor:pointer;
+    text-shadow:0 0 6px var(--neon);
   }
+  #startBtn:active{transform:translateY(1px)}
+  /* small screen tweak */
+  @media (max-width:420px){ h1{font-size:2rem} .heart-wrap{width:140px;height:140px} }
 </style>
 </head>
 <body>
   <h1>Proliferate?</h1>
-  <div class="heart-container">
-    <svg id="heart" viewBox="0 0 512 512">
+
+  <div class="heart-wrap" aria-hidden="true">
+    <!-- inline SVG heart — no external assets -->
+    <svg id="heart" viewBox="0 0 512 512" role="img" aria-label="heart icon">
       <path d="M462.3 62.6c-54.5-46.4-136-38.3-178.7 13.9L256 96l-27.6-19.5c-42.7-52.2-124.2-60.3-178.7-13.9-62.5 53.2-66.1 149.8-9.9 207.5l193.5 199.8c12 12.4 31.6 12.4 43.6 0l193.5-199.8c56.1-57.7 52.6-154.3-9.9-207.5z"/>
     </svg>
   </div>
 
   <button id="startBtn">Start Signal</button>
 
-<audio id="buzz" loop>
-  <source src="https://freesound.org/data/previews/275/275948_5121236-lq.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-  const heart = document.getElementById('heart');
-  const buzz = document.getElementById('buzz');
-  const btn = document.getElementById('startBtn');
-
-  const morsePattern = [200, 200, 200, 600, 600, 600, 200, 200, 200]; // SOS example
-  let i = 0;
-
-  function flashHeart() {
-    heart.style.opacity = '1';
-    setTimeout(() => {
-      heart.style.opacity = '0.2';
-      i = (i + 1) % morsePattern.length;
-      setTimeout(flashHeart, morsePattern[i]);
-    }, morsePattern[i]);
-  }
-
-  btn.addEventListener('click', () => {
-    buzz.volume = 0.05;
-    buzz.play();
-    flashHeart();
-    btn.style.display = 'none'; // hide button after start
+/* -------------------------
+   Protection / deterrents
+   (cosmetic: prevents casual copy-paste)
+   ------------------------- */
+(function(){
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    // block common view-source / devtools shortcuts (deterrent only)
+    if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key==='s' || e.key==='S' || e.key==='c' || e.key==='C')) e.preventDefault();
+    if (e.key === 'F12') e.preventDefault();
   });
+})();
+
+/* -------------------------
+   Obfuscated Morse timings:
+   - This is base64 of UINT16 little-endian values XORed with 0xA5A5
+   - Decoded at runtime to produce duration array (ms)
+   ------------------------- */
+
+const ob = "baVtpf2n/af9p22l/af9p92gbaVtpW2l/afdoP2nbaVtpf2n/adtpf2nbaX9p/2n/af9p92g/adtpf2nbaVtpf2n/adtpf2nbaX9p/af9p92g/adtpf2nbaVtp/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92g/adtpf2nbaX9p/af9p92gbaVtp/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaX9p/2n/af9p92g/adtpf2nbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtp/af9p92gbaX9p/2n/af9p92gbaVtp/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaX9p/2n/af9p92gbaVtpW2l/af9p92gbaVtp/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p92gbaVtpW2l/af9p";
+
+// small helper to base64-decode in browser (handles ASCII b64)
+function b64toUint8(b64){
+  const bin = atob(b64);
+  const len = bin.length;
+  const out = new Uint8Array(len);
+  for(let i=0;i<len;i++) out[i]=bin.charCodeAt(i);
+  return out;
+}
+
+/* decode obfuscated binary -> durations array (ms) */
+function decodeDurations(b64){
+  const key = (0xA5<<8) | 0xA5; // 0xA5A5
+  const u8 = b64toUint8(b64);
+  // treat as little-endian uint16
+  const dur = [];
+  for(let i=0;i+1<u8.length;i+=2){
+    const val = u8[i] | (u8[i+1]<<8);
+    const restored = val ^ key;
+    dur.push(restored);
+  }
+  // The decoded sequence is alternating ON/OFF durations starting with ON
+  return dur;
+}
+
+/* -------------------------
+   Audio: subtle electronic buzz using WebAudio
+   ------------------------- */
+function makeOscillator(ctx){
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  // a slightly noisy 'buzz' timbre: triangle + tiny detune via second oscillator
+  o.type = 'sine';
+  o.frequency.value = 120; // base tone
+  const o2 = ctx.createOscillator();
+  o2.type = 'sawtooth';
+  o2.frequency.value = 121.5;
+  // master gain
+  g.gain.value = 0.0008; // very subtle
+  // slight filter to reduce harshness
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 140;
+  bp.Q.value = 0.7;
+
+  o.connect(g);
+  o2.connect(g);
+  g.connect(bp);
+  bp.connect(ctx.destination);
+  o.start(0);
+  o2.start(0);
+  return {o,o2,g,bp};
+}
+
+/* -------------------------
+   Flashing engine
+   - toggles svg opacity between low and full based on durations array
+   - durations array alternates ON / OFF durations starting with ON
+   ------------------------- */
+
+const heartEl = document.getElementById('heart');
+const startBtn = document.getElementById('startBtn');
+
+let _running = false;
+let _stopFlag = false;
+let audioCtx, oscObjs;
+
+/* flash loop runs recursively via setTimeout for simple control */
+function startFlashWithAudio(durations){
+  if(_running) return;
+  _running = true;
+  _stopFlag = false;
+
+  // build audio
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  oscObjs = makeOscillator(audioCtx);
+
+  let idx = 0;
+  // ensure we start with heart dim
+  heartEl.style.opacity = '0.2';
+
+  function step(){
+    if(_stopFlag){ _running=false; try{ audioCtx.close(); }catch(e){}; return; }
+    const duration = durations[idx % durations.length];
+    // toggle: even idx -> ON, odd -> OFF (since sequence starts with ON)
+    const isOn = (idx % 2 === 0);
+    heartEl.style.opacity = isOn ? '1' : '0.18';
+    // small gentle gain modulation to sync audio 'thump' with ON pulses
+    if(isOn && oscObjs && oscObjs.g){
+      // create a transient bump
+      const now = audioCtx.currentTime;
+      oscObjs.g.gain.cancelScheduledValues(now);
+      oscObjs.g.gain.setValueAtTime(oscObjs.g.gain.value, now);
+      oscObjs.g.gain.linearRampToValueAtTime(0.0025, now + 0.01);
+      oscObjs.g.gain.exponentialRampToValueAtTime(0.0006, now + Math.min(duration/1000, 0.2));
+    }
+    idx++;
+    setTimeout(step, duration);
+  }
+  step();
+}
+
+/* -------------------------
+   Hook: start button must be clicked (autoplay policy)
+   ------------------------- */
+startBtn.addEventListener('click', function(){
+  // decode durations from obfuscated blob
+  const d = decodeDurations(ob);
+  // small sanity filter: remove zero or absurd durations
+  const clean = d.map(x=> (x>0 && x<10000) ? x : 200 );
+  startFlashWithAudio(clean);
+  startBtn.style.display='none';
+});
+
+/* Note: this obfuscation is a deterrent, not unbreakable.
+   If you want higher secrecy: fetch the obfuscated blob from your server (API) so it doesn't appear in-page,
+   or use stronger crypto + server-side delivery. */
 </script>
 </body>
 </html>
