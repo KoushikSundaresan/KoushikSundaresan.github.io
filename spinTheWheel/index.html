@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unwind Spin the Wheel</title>
+<style>
+    body, html { margin:0; padding:0; font-family:'Nunito', sans-serif; height:100%; display:flex; flex-direction:column; justify-content:space-between; background-color:#f9f9f9; overflow:hidden; }
+    header { width:100%; background-color:#54665a; display:flex; justify-content:center; padding:10px 0; }
+    header img { width:100%; max-width:600px; height:auto; border-radius:12px; }
+    main { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; }
+    #wheelCanvas { border:6px solid #54665a; border-radius:50%; background:#fff; }
+    #spin-btn { margin-top:20px; padding:15px 30px; background-color:#ffe066; color:#54665a; font-size:18px; font-weight:bold; border:none; border-radius:12px; cursor:pointer; transition: transform 0.2s; }
+    #spin-btn:hover { transform: scale(1.05); }
+    #dare-box { margin-top:25px; padding:15px 25px; background-color:#a3d2ca; color:#54665a; font-weight:bold; border-radius:12px; font-size:18px; text-align:center; min-height:60px; display:flex; align-items:center; justify-content:center; width:80%; max-width:500px; }
+    footer { width:100%; background-color:#54665a; display:flex; justify-content:center; align-items:center; padding:10px 0; gap:40px; }
+    footer img { width:50px; height:50px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+    <img src="https://i.imgur.com/6s1Z9e9.jpg" alt="Unwind Recruitment Banner">
+</header>
+
+<main>
+    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+    <button id="spin-btn">Spin the Wheel!</button>
+    <div id="dare-box">Click to get your wholesome dare 🌿</div>
+</main>
+
+<footer>
+    <a href="https://www.instagram.com/unwind.bpdc" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Logo">
+    </a>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.instagram.com/unwind.bpdc" alt="Instagram QR Code">
+</footer>
+
+<script>
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const spinBtn = document.getElementById('spin-btn');
+const dareBox = document.getElementById('dare-box');
+
+let dares = [
+    { title:"Compliment 3", desc:"Compliment 3 people around you today."},
+    { title:"Breathing Break", desc:"Take a 1-minute deep breathing break."},
+    { title:"Say Thank You", desc:"Say 'thank you' to someone who helps you."},
+    { title:"Share Memory", desc:"Share a positive memory with a friend."},
+    { title:"Gratitude Note", desc:"Write down one thing you’re grateful for."},
+    { title:"Draw Doodle", desc:"Draw a doodle and share it with someone."},
+    { title:"High-Five", desc:"Give someone a high-five."},
+    { title:"Smile!", desc:"Smile at a stranger (it’s contagious!)."},
+    { title:"Uplifting Quote", desc:"Share a favorite uplifting quote with someone."},
+    { title:"Thinking of You", desc:"Send a 'thinking of you' message to a friend."},
+    { title:"Stretch", desc:"Stretch for 2 minutes."},
+    { title:"Happy Photo", desc:"Take a photo of something that makes you happy."},
+    { title:"Self Compliment", desc:"Compliment your own reflection in the mirror."},
+    { title:"Dance 30s", desc:"Listen to your favorite song and dance for 30 sec."},
+    { title:"Mindful Pause", desc:"Hold a mindful pause and notice 3 things around you."},
+    { title:"Positive Intention", desc:"Write down a positive intention for the day."},
+    { title:"Share a Joke", desc:"Share a joke with someone nearby."},
+    { title:"Be Kind to Self", desc:"Say something kind to yourself out loud."},
+    { title:"Offer Help", desc:"Offer help to someone who looks stressed."},
+    { title:"Screen Break", desc:"Take a 1-minute screen break."},
+    { title:"Sticky Note", desc:"Draw a happy face on a sticky note and leave it for someone."},
+    { title:"Compliment Peer", desc:"Give a genuine compliment to a classmate."},
+    { title:"Small Act", desc:"Share a small act of kindness (like holding a door)."},
+    { title:"Appreciate Someone", desc:"Tell someone why you appreciate them."},
+    { title:"Jumping Jacks", desc:"Do 5 jumping jacks or a small movement to energize."}
+];
+
+let startAngle = 0;
+let spinning = false;
+
+function drawWheel() {
+    const numSegments = dares.length;
+    const anglePerSegment = 2 * Math.PI / numSegments;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(let i=0;i<numSegments;i++){
+        ctx.beginPath();
+        ctx.moveTo(250,250);
+        ctx.arc(250,250,250,startAngle + i*anglePerSegment, startAngle + (i+1)*anglePerSegment);
+        ctx.fillStyle = i%2===0 ? "#ffe066" : "#a3d2ca";
+        ctx.fill();
+        ctx.strokeStyle = "#54665a";
+        ctx.lineWidth=2;
+        ctx.stroke();
+
+        // Text
+        ctx.save();
+        ctx.translate(250,250);
+        ctx.rotate(startAngle + i*anglePerSegment + anglePerSegment/2);
+        ctx.textAlign="right";
+        ctx.fillStyle="#54665a";
+        ctx.font="bold 16px Nunito";
+        ctx.fillText(dares[i].title, 240,5);
+        ctx.restore();
+    }
+}
+
+// Draw pointer
+function drawPointer(){
+    ctx.fillStyle="#54665a";
+    ctx.beginPath();
+    ctx.moveTo(250,0);
+    ctx.lineTo(240,20);
+    ctx.lineTo(260,20);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function spinWheel() {
+    if(spinning || dares.length===0) return;
+    spinning=true;
+
+    const spins = Math.floor(Math.random()*3)+4; //4-6 spins
+    const segmentAngle = 2*Math.PI/dares.length;
+    const selectedIndex = Math.floor(Math.random()*dares.length);
+    const finalAngle = (2*Math.PI*spins) - selectedIndex*segmentAngle - segmentAngle/2;
+
+    let currentRotation = 0;
+    const duration = 4000;
+    const start = performance.now();
+
+    function animate(time){
+        let elapsed = time - start;
+        if(elapsed < duration){
+            const t = elapsed/duration;
+            const ease = 1 - Math.pow(1-t,3); // ease out cubic
+            const angle = ease*finalAngle;
+            startAngle = angle;
+            drawWheel();
+            drawPointer();
+            requestAnimationFrame(animate);
+        }else{
+            startAngle = finalAngle;
+            drawWheel();
+            drawPointer();
+            // Show dare
+            dareBox.textContent = dares[selectedIndex].desc;
+            // Remove used dare
+            dares.splice(selectedIndex,1);
+            drawWheel(); // redraw updated wheel
+            spinning=false;
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+drawWheel();
+drawPointer();
+
+spinBtn.addEventListener('click', spinWheel);
+</script>
+
+</body>
+</html>
