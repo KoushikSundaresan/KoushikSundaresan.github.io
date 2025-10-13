@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Signal of the Circuit</title>
+  <style>
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.6; }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(-100%); opacity: 0.05; }
+      100% { transform: translateY(100%); opacity: 0.05; }
+    }
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 6px #00ff99, 0 0 20px #00ff99; }
+      50% { text-shadow: 0 0 12px #00ffaa, 0 0 40px #00ffaa; }
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at center, #001100 0%, #000000 80%);
+      color: #00ff99;
+      font-family: "Courier New", monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      letter-spacing: 1px;
+      overflow: hidden;
+    }
+    .screen {
+      position: relative;
+      padding: 2rem;
+      border: 1px solid #003300;
+      background-color: rgba(0, 30, 0, 0.3);
+      box-shadow: 0 0 30px #00ff9920 inset, 0 0 50px #00ff9920;
+      animation: flicker 3s infinite;
+    }
+    img {
+      max-width: 85%;
+      border: 1px solid #004400;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px #00ff8820;
+    }
+    h1, p {
+      margin: 10px 0;
+      animation: pulse 3s infinite alternate;
+    }
+    .hint {
+      color: #007744;
+      font-size: 0.9rem;
+      margin-top: 20px;
+    }
+    .scanline {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 255, 153, 0.1);
+      top: 0;
+      left: 0;
+      animation: scanline 3s linear infinite;
+    }
+    .glow {
+      color: #00ff99;
+      text-shadow: 0 0 5px #00ff99, 0 0 15px #00ff99;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="scanline"></div>
+    <h1 class="glow">The Machine dreams of logic beyond reason.</h1>
+    <p>01101001 01100101 01100101</p>
+    <img src="puzzles/birth/helloworld.png" alt="The Signal of the Circuit" />
+    <p class="hint">#3301IEEE</p>
+  </div>
+</body>
+</html>
