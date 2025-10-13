@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Playing goD?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root{
+  --red: #ff0033;
+  --neon: #ff3355;
+  --bg1: #220000;
+  --bg2: #000000;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  background: radial-gradient(circle at center, var(--bg1) 0%, var(--bg2) 100%);
+  color: var(--neon);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.board-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg,#330000, #120000);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 60px rgba(255,0,51,0.2), inset 0 0 25px rgba(255,0,51,0.05);
+}
+
+/* Header inside board */
+.puzzle-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.5rem;
+  color: var(--neon);
+  text-align: center;
+  text-shadow: 0 0 12px var(--neon);
+}
+
+.puzzle-header p {
+  margin: 0 0 20px 0;
+  color: #ffb3c0;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#board {
+  display: grid;
+  gap: 5px;
+  width: min(80vmin, 680px);
+  height: min(80vmin, 680px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.tile {
+  background-size: 100% 100%;
+  background-position: center;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255,51,85,0.1), inset 0 0 6px rgba(255,51,85,0.03);
+  transition: transform 0.08s ease, box-shadow 0.2s ease;
+}
+.tile:active { transform: scale(0.99); }
+
+.controls {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+button, .hint {
+  background: transparent;
+  border: 1px solid var(--neon);
+  color: var(--neon);
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+}
+button:active { transform: translateY(1px); }
+
+.hint { 
+  border: none; 
+  color: #ffb3c0; 
+  padding: 0;
+  cursor: default;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.9);
+  z-index: 40;
+  flex-direction: column;
+  color: #fff;
+  text-align: center;
+  gap: 15px;
+  padding: 25px;
+}
+
+.flag {
+  background: #220000;
+  border: 1px solid #440000;
+  padding: 22px 26px;
+  border-radius: 14px;
+  box-shadow: 0 0 35px rgba(255,51,85,0.15);
+  max-width: 90%;
+}
+
+.flag code { 
+  color: #ffccd9; 
+  font-weight: 700; 
+  letter-spacing: 1px; 
+  word-break: break-all; 
+}
+
+.small { color: #ff9aa6; font-size: 0.95rem; }
+footer { margin-top: 25px; color: #ff9aa6; font-size: 0.9rem; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="board-wrap">
+  <!-- Heading & Subheading -->
+  <div class="puzzle-header">
+    <h1>Playing goD?</h1>
+    <p>Why create me just to end it all?</p>
+  </div>
+
+  <!-- Puzzle Grid -->
+  <div id="board" aria-hidden="true"></div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button id="shuffleBtn">Shuffle</button>
+    <button id="resetBtn">Reset</button>
+    <div class="hint">Solve the image to reveal the encoded link (Base64).</div>
+  </div>
+</div>
+
+<footer>Hint: visual patience beats force.</footer>
+
+<div id="solvedOverlay" class="overlay" style="display:none;">
+  <div class="flag">
+    <div class="small">BASE64 FOUND (decode to get the destination filename)</div>
+    <div style="margin-top:10px;font-size:1.05rem;"><code id="b64Code">[locked]</code></div>
+    <div style="margin-top:10px;color:#ffbcc8;">Decode that string (Base64) to get the file name, then navigate to it.</div>
+    <div style="margin-top:14px;font-size:0.95rem;color:#ff8b9a;">Example: paste into an online base64 decoder or run: <code>echo &lt;BASE64&gt; | base64 --decode</code></div>
+  </div>
+  <div class="small">Good luck escaping.</div>
+</div>
+
+<script>
+const GRID = 5;
+const board = document.getElementById('board');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const resetBtn = document.getElementById('resetBtn');
+const solvedOverlay = document.getElementById('solvedOverlay');
+const b64CodeEl = document.getElementById('b64Code');
+
+let tiles = [];
+let selection = null;
+
+board.style.gridTemplateColumns = `repeat(${GRID}, 1fr)`;
+board.style.gridTemplateRows = `repeat(${GRID}, 1fr)`;
+
+// Obfuscated Base64
+const key = 0x5A;
+const data = [35,9,29,12,107,111,62,0,55,99,29,41,59,53,56,105];
+const perm = [7,9,5,6,14,10,12,8,1,2,13,15,4,11,0,3];
+function reconstructString(){
+  const n = data.length;
+  const out = new Array(n);
+  for(let i=0;i<n;i++){
+    const placed = data[i] ^ key;
+    const pos = perm[i];
+    out[pos] = placed;
+  }
+  return out.map(ch => String.fromCharCode(ch)).join('');
+}
+
+// procedural canvas image generation
+function generateSourceCanvas(size){
+  const cvs = document.createElement('canvas');
+  cvs.width = cvs.height = size;
+  const ctx = cvs.getContext('2d');
+
+  const g = ctx.createLinearGradient(0,0,size,size);
+  g.addColorStop(0, '#330000');
+  g.addColorStop(1, '#120000');
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,size,size);
+
+  // sharper tiles for easier visual solving
+  for(let i=0;i<50;i++){
+    const x = Math.random()*size;
+    const y = Math.random()*size;
+    const r = size * (0.03 + Math.random()*0.1);
+    const red = Math.floor(150 + Math.random()*105);
+    const alpha = 0.3 + Math.random()*0.3;
+    ctx.fillStyle = `rgba(${red},20,30,${alpha})`;
+    if(Math.random() < 0.5){
+      ctx.fillRect(x-r/2, y-r/2, r, r);
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, r/1.5, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  // optional neon lines as puzzle hints
+  for(let i=0;i<15;i++){
+    ctx.strokeStyle = `rgba(255,50,80,0.4)`;
+    ctx.lineWidth = 1 + Math.random()*2;
+    ctx.beginPath();
+    ctx.moveTo(Math.random()*size, Math.random()*size);
+    ctx.lineTo(Math.random()*size, Math.random()*size);
+    ctx.stroke();
+  }
+
+  return cvs;
+}
+
+// create tiles
+function createTiles(){
+  board.innerHTML = '';
+  tiles = [];
+  selection = null;
+
+  const SIZE = Math.min(720, Math.floor(window.innerWidth * 0.85));
+  const canvas = generateSourceCanvas(SIZE);
+  const tileW = Math.floor(SIZE / GRID);
+  const tileH = Math.floor(SIZE / GRID);
+
+  for(let r=0;r<GRID;r++){
+    for(let c=0;c<GRID;c++){
+      const sx = c*tileW;
+      const sy = r*tileH;
+      const tc = document.createElement('canvas');
+      tc.width = tileW;
+      tc.height = tileH;
+      const tctx = tc.getContext('2d');
+      tctx.drawImage(canvas, sx, sy, tileW, tileH, 0, 0, tileW, tileH);
+
+      const div = document.createElement('div');
+      div.className = 'tile';
+      div.style.backgroundImage = `url(${tc.toDataURL()})`;
+      div.dataset.index = (r*GRID + c).toString();
+      div.dataset.current = div.dataset.index;
+      div.addEventListener('click', onTileClick);
+      board.appendChild(div);
+      tiles.push(div);
+    }
+  }
+}
+
+function onTileClick(e){
+  const t = e.currentTarget;
+  if(selection === null){
+    selection = t;
+    t.style.outline = '2px solid rgba(255,80,110,0.6)';
+    t.style.boxShadow = '0 0 16px rgba(255,80,110,0.2)';
+    return;
+  }
+  if(selection === t){
+    selection.style.outline = '';
+    selection.style.boxShadow = '';
+    selection = null;
+    return;
+  }
+  const aIdx = selection.dataset.current;
+  const bIdx = t.dataset.current;
+  const aBg = selection.style.backgroundImage;
+  const bBg = t.style.backgroundImage;
+
+  selection.style.backgroundImage = bBg;
+  t.style.backgroundImage = aBg;
+
+  selection.dataset.current = bIdx;
+  t.dataset.current = aIdx;
+
+  selection.style.outline = '';
+  selection.style.boxShadow = '';
+  selection = null;
+
+  checkSolved();
+}
+
+function shuffleTiles(times = 200){
+  for(let i=0;i<times;i++){
+    const a = Math.floor(Math.random()*tiles.length);
+    let b = Math.floor(Math.random()*tiles.length);
+    if(a===b) b = (b+1)%tiles.length;
+    const A = tiles[a], B = tiles[b];
+    const tmpBG = A.style.backgroundImage;
+    A.style.backgroundImage = B.style.backgroundImage;
+    B.style.backgroundImage = tmpBG;
+    const tmpIdx = A.dataset.current;
+    A.dataset.current = B.dataset.current;
+    B.dataset.current = tmpIdx;
+  }
+  if(isSolved()) shuffleTiles(times);
+}
+
+function isSolved(){ return tiles.every(t=>t.dataset.current===t.dataset.index); }
+
+function checkSolved(){
+  if(isSolved()){
+    const revealed = reconstructString();
+    b64CodeEl.textContent = revealed;
+    solvedOverlay.style.display='flex';
+    tiles.forEach(t=>t.style.pointerEvents='none');
+  }
+}
+
+shuffleBtn.addEventListener('click', ()=>shuffleTiles(350));
+resetBtn.addEventListener('click', ()=>{createTiles(); shuffleTiles(250);});
+
+createTiles();
+shuffleTiles(350);
+
+let resizeTimer;
+window.addEventListener('resize', ()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(()=>{
+    createTiles();
+    shuffleTiles(200);
+  },300);
+});
+</script>
+</body>
+</html>
