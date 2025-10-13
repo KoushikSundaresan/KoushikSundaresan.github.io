@@ -5,16 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unwind Spin the Wheel</title>
 <style>
-    body, html { margin:0; padding:0; font-family:'Nunito', sans-serif; height:100%; display:flex; flex-direction:column; justify-content:space-between; background-color:#f9f9f9; overflow:hidden; }
+    body, html { 
+        margin:0; padding:0; font-family:'Nunito', sans-serif; 
+        height:100%; display:flex; flex-direction:column; justify-content:flex-start; 
+        background-color:#f9f9f9; overflow:hidden; 
+    }
     header { width:100%; background-color:#54665a; display:flex; justify-content:center; padding:10px 0; }
     header img { width:100%; max-width:600px; height:auto; border-radius:12px; }
-    main { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; }
-    #wheelCanvas { border:6px solid #54665a; border-radius:50%; background:#fff; }
+
+    main { 
+        display:flex; flex-direction:row; flex:1; align-items:center; justify-content:center; gap:40px; padding:20px;
+    }
+
+    /* Wheel section */
+    #wheel-container { flex:7; display:flex; flex-direction:column; align-items:center; }
+    #wheelCanvas { max-height:70vh; border:6px solid #54665a; border-radius:50%; background:#fff; }
     #spin-btn { margin-top:20px; padding:15px 30px; background-color:#ffe066; color:#54665a; font-size:18px; font-weight:bold; border:none; border-radius:12px; cursor:pointer; transition: transform 0.2s; }
     #spin-btn:hover { transform: scale(1.05); }
-    #dare-box { margin-top:25px; padding:15px 25px; background-color:#a3d2ca; color:#54665a; font-weight:bold; border-radius:12px; font-size:18px; text-align:center; min-height:60px; display:flex; align-items:center; justify-content:center; width:80%; max-width:500px; }
+    #dare-box { margin-top:25px; padding:15px 25px; background-color:#a3d2ca; color:#54665a; font-weight:bold; border-radius:12px; font-size:18px; text-align:center; min-height:60px; display:flex; align-items:center; justify-content:center; width:100%; max-width:500px; }
+
+    /* QR section */
+    #qr-container { flex:3; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; }
+    #qr-container img { width:150px; height:150px; cursor:pointer; }
+    #qr-container span { color:#54665a; font-weight:bold; font-size:18px; text-align:center; }
+
     footer { width:100%; background-color:#54665a; display:flex; justify-content:center; align-items:center; padding:10px 0; gap:40px; }
-    footer img { width:50px; height:50px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -24,16 +39,22 @@
 </header>
 
 <main>
-    <canvas id="wheelCanvas" width="500" height="500"></canvas>
-    <button id="spin-btn">Spin the Wheel!</button>
-    <div id="dare-box">Click to get your wholesome dare 🌿</div>
+    <!-- Wheel Section -->
+    <div id="wheel-container">
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        <button id="spin-btn">Spin the Wheel!</button>
+        <div id="dare-box">Click to get your wholesome dare 🌿</div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div id="qr-container">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.instagram.com/unwind.bpdc" alt="Instagram QR Code">
+        <span>Follow for dare</span>
+    </div>
 </main>
 
 <footer>
-    <a href="https://www.instagram.com/unwind.bpdc" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Logo">
-    </a>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.instagram.com/unwind.bpdc" alt="Instagram QR Code">
+    <span style="color:#fff;">🌿 Unwind – BITS Dubai Student Wellbeing & Culture Collective</span>
 </footer>
 
 <script>
@@ -120,7 +141,6 @@ function spinWheel() {
     const selectedIndex = Math.floor(Math.random()*dares.length);
     const finalAngle = (2*Math.PI*spins) - selectedIndex*segmentAngle - segmentAngle/2;
 
-    let currentRotation = 0;
     const duration = 4000;
     const start = performance.now();
 
@@ -138,11 +158,9 @@ function spinWheel() {
             startAngle = finalAngle;
             drawWheel();
             drawPointer();
-            // Show dare
             dareBox.textContent = dares[selectedIndex].desc;
-            // Remove used dare
             dares.splice(selectedIndex,1);
-            drawWheel(); // redraw updated wheel
+            drawWheel();
             spinning=false;
         }
     }
@@ -151,7 +169,6 @@ function spinWheel() {
 
 drawWheel();
 drawPointer();
-
 spinBtn.addEventListener('click', spinWheel);
 </script>
 
