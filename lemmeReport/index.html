@@ -20,16 +20,29 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="topbar">
-        <div class="header-content">
-            <h1 class="logo">
-                <img src="assets/icons/logo.svg" alt="Logo" class="logo-icon custom-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span class="logo-icon emoji-fallback">🛡️</span>
-                LemmeReport
-            </h1>
-            <p class="tagline">Community-Powered Safety</p>
-        </div>
-    </header>
+   <header class="topbar">
+    <div class="header-content" style="display:flex; flex-direction:column; align-items:center;">
+
+        <h1 class="logo" style="display:flex; align-items:center; gap:10px;">
+
+            <!-- SVG LOGO — controlled size -->
+            <img src="assets/icons/logo.svg" 
+                 alt="Logo"
+                 class="logo-icon custom-icon"
+                 style="width:38px; height:38px; object-fit:contain; display:inline-block;"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+
+            <!-- Emoji fallback -->
+            <span class="logo-icon emoji-fallback" style="font-size:32px; display:none;">🛡️</span>
+
+            <!-- Title -->
+            <span style="font-size:1.8rem; font-weight:700;">LemmeReport</span>
+        </h1>
+
+        <p class="tagline" style="margin-top:6px;">Community-Powered Safety</p>
+    </div>
+</header>
+
 
     <div class="container">
         <!-- Dashboard Navigation -->
