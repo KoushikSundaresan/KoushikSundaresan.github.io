@@ -1,4 +1,4 @@
-# 🏗️ **LemmeReport — System Architecture**
+#  **LemmeReport — System Architecture**
 
 LemmeReport is a lightweight, mobile-first community safety reporting platform designed for citizens to quickly submit incidents and for municipal authorities to visualize and act on them.
 The system uses a **static frontend**, a **Google Sheets backend**, and **minimal JavaScript**, making it hackathon-friendly, low-cost, and instantly deployable.
@@ -93,7 +93,7 @@ flowchart TB
     BE1 --> BE6
     BE6 --> DB3
 ```
-## 📌 **1. High-Level Overview**
+##  **1. High-Level Overview**
 
 ```
 User → Frontend (HTML/CSS/JS) → Apps Script API → Google Sheets (Database)
@@ -142,7 +142,7 @@ Key goals:
 
 ---
 
-## 🗺️ **3. Map System Architecture**
+##  **3. Map System Architecture**
 
 ### **Map Library**
 
@@ -168,7 +168,7 @@ Key goals:
 
 ---
 
-## 📊 **4. Data Flow Architecture**
+##  **4. Data Flow Architecture**
 
 ### **Submit Report Flow**
 
@@ -202,7 +202,7 @@ Live Feed lists newest reports
 
 ---
 
-## 🧩 **5. Backend Architecture (Google Sheets + Apps Script)**
+##  **5. Backend Architecture (Google Sheets + Apps Script)**
 
 LemmeReport uses **Google Sheets as the database** and **Apps Script as the backend API**.
 
@@ -226,7 +226,7 @@ Returns all rows in JSON format.
 
 ---
 
-## 🔐 **6. Security Model**
+##  **6. Security Model**
 
 ### **MVP Security**
 
@@ -291,7 +291,7 @@ LemmeReport includes a built-in offline/demo system so judges can see functional
 
 ---
 
-## 🛠️ **9. Deployment Architecture**
+##  **9. Deployment Architecture**
 
 ### **Recommended Deployment**
 
@@ -313,7 +313,7 @@ Google Sheets (Database)
 
 ---
 
-## 🪜 **10. Future Expansion Architecture**
+##  **10. Future Expansion Architecture**
 
 | Feature            | Architecture Upgrade          |
 | ------------------ | ----------------------------- |
