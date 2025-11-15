@@ -288,7 +288,7 @@ const categoryTemplates = {
                 <option value="road_construction_debris">Road construction debris</option>
                 <option value="fallen_trees">Fallen trees / broken branches</option>
             </select>
-            <small style="display: block; margin-top: 8px; color: #10b981;">📌 High/Medium: Notifies Municipality</small>
+            <small style="display: block; margin-top: 8px; color: #10b981;">📌 High/Medium: Notifies Municipality - we will run this image for false reporting AI checker</small>
         </div>
     `,
     "waste": `
@@ -304,7 +304,7 @@ const categoryTemplates = {
                 <option value="public_toilet_issues">Public toilet issues</option>
                 <option value="sewage_smell">Sewage smell in area</option>
             </select>
-            <small style="display: block; margin-top: 8px; color: #10b981;">📌 Medium: Notifies Municipality</small>
+            <small style="display: block; margin-top: 8px; color: #10b981;">📌 Medium: Notifies Municipality - we will run this image for false reporting AI checker</small>
         </div>
     `,
     "community": `
