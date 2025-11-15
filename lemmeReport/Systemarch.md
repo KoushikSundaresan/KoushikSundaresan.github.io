@@ -5,6 +5,94 @@ The system uses a **static frontend**, a **Google Sheets backend**, and **minima
 
 ---
 
+
+```mermaid
+flowchart TB
+    %% ===== USER LAYER =====
+    subgraph U[User Layer]
+        U1[Mobile Browser]
+        U2[Desktop Browser]
+    end
+
+    %% ===== FRONTEND LAYER =====
+    subgraph FE[Frontend Layer - HTML, CSS, JavaScript]
+        FE1[UI Screens: Home, Submit Report, Live Reports, Dashboards]
+        FE2[Report Form Module: Validation, Categories]
+        FE3[Local JSON Store: Offline Demo Data]
+        FE4[Geolocation Engine]
+        FE5[Leaflet Map System: Markers, Tiles]
+        FE6[Media Handling: Image Preview]
+        FE7[Dashboard Renderer: Stats, Tables]
+    end
+
+    %% ===== BACKEND LAYER =====
+    subgraph BE[Backend API - Google Apps Script]
+        BE1[POST /addReport]
+        BE2[GET /listReports]
+        BE3[Input Sanitizer]
+        BE4[Sheets Writer]
+        BE5[Sheets Reader]
+        BE6[Logging Module]
+    end
+
+    %% ===== DATABASE LAYER =====
+    subgraph DB[Database Layer - Google Sheets]
+        DB1[(Reports Sheet)]
+        DB2[(Analytics Sheet)]
+        DB3[(Logs Sheet)]
+    end
+
+    %% ===== DEPARTMENT DASHBOARDS =====
+    subgraph DEP[Department Dashboards]
+        DP1[Incident Heatmap]
+        DP2[Priority List]
+        DP3[Resolved vs Pending Stats]
+        DP4[AI Summaries - Future]
+    end
+
+    %% ===== CONNECTIONS =====
+
+    %% User to Frontend
+    U1 --> FE1
+    U2 --> FE1
+
+    %% Frontend Internals
+    FE1 --> FE2
+    FE1 --> FE4
+    FE2 --> FE5
+    FE2 --> FE6
+    FE1 --> FE7
+
+    %% Local JSON Storage Flow
+    FE2 --> FE3
+    FE3 --> FE1
+    FE7 --> FE3
+
+    %% Frontend to Backend
+    FE2 -- Submit Report --> BE1
+    FE7 -- Fetch Analytics --> BE2
+
+    %% Backend Data Flow
+    BE1 --> BE3
+    BE3 --> BE4
+    BE4 --> DB1
+
+    DB1 --> BE5
+    BE5 --> BE2
+    BE2 --> FE1
+
+    %% Analytics Flow
+    DB1 --> DB2
+    DB2 --> DEP
+
+    DEP --> DP1
+    DEP --> DP2
+    DEP --> DP3
+
+    %% Logging
+    BE1 --> BE6
+    BE6 --> DB3
+```
 ## 📌 **1. High-Level Overview**
 
 ```
@@ -238,91 +326,3 @@ Google Sheets (Database)
 ---
 
 
-
-
-```mermaid
-flowchart TB
-    %% ===== USER LAYER =====
-    subgraph U[User Layer]
-        U1[Mobile Browser]
-        U2[Desktop Browser]
-    end
-
-    %% ===== FRONTEND LAYER =====
-    subgraph FE[Frontend Layer - HTML, CSS, JavaScript]
-        FE1[UI Screens: Home, Submit Report, Live Reports, Dashboards]
-        FE2[Report Form Module: Validation, Categories]
-        FE3[Local JSON Store: Offline Demo Data]
-        FE4[Geolocation Engine]
-        FE5[Leaflet Map System: Markers, Tiles]
-        FE6[Media Handling: Image Preview]
-        FE7[Dashboard Renderer: Stats, Tables]
-    end
-
-    %% ===== BACKEND LAYER =====
-    subgraph BE[Backend API - Google Apps Script]
-        BE1[POST /addReport]
-        BE2[GET /listReports]
-        BE3[Input Sanitizer]
-        BE4[Sheets Writer]
-        BE5[Sheets Reader]
-        BE6[Logging Module]
-    end
-
-    %% ===== DATABASE LAYER =====
-    subgraph DB[Database Layer - Google Sheets]
-        DB1[(Reports Sheet)]
-        DB2[(Analytics Sheet)]
-        DB3[(Logs Sheet)]
-    end
-
-    %% ===== DEPARTMENT DASHBOARDS =====
-    subgraph DEP[Department Dashboards]
-        DP1[Incident Heatmap]
-        DP2[Priority List]
-        DP3[Resolved vs Pending Stats]
-        DP4[AI Summaries - Future]
-    end
-
-    %% ===== CONNECTIONS =====
-
-    %% User to Frontend
-    U1 --> FE1
-    U2 --> FE1
-
-    %% Frontend Internals
-    FE1 --> FE2
-    FE1 --> FE4
-    FE2 --> FE5
-    FE2 --> FE6
-    FE1 --> FE7
-
-    %% Local JSON Storage Flow
-    FE2 --> FE3
-    FE3 --> FE1
-    FE7 --> FE3
-
-    %% Frontend to Backend
-    FE2 -- Submit Report --> BE1
-    FE7 -- Fetch Analytics --> BE2
-
-    %% Backend Data Flow
-    BE1 --> BE3
-    BE3 --> BE4
-    BE4 --> DB1
-
-    DB1 --> BE5
-    BE5 --> BE2
-    BE2 --> FE1
-
-    %% Analytics Flow
-    DB1 --> DB2
-    DB2 --> DEP
-
-    DEP --> DP1
-    DEP --> DP2
-    DEP --> DP3
-
-    %% Logging
-    BE1 --> BE6
-    BE6 --> DB3
