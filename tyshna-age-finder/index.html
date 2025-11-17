@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Age Finder</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dbe6f6, #c5796d);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: transform .3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #222;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+    color: #222;
+  }
+
+  input[type="date"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.7);
+    font-size: 16px;
+  }
+
+  input[type="file"] {
+    margin-top: 10px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: #333;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s;
+  }
+
+  button:hover {
+    background: #111;
+  }
+
+  #result {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #222;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Age Finder</h2>
+
+  <label>Upload ID Image (Date Extract Enabled)</label>
+  <input type="file" accept="image/*" />
+
+  <label>Enter Date of Birth</label>
+  <input type="date" id="dob" />
+
+  <label>OR Manually Enter Age</label>
+  <input type="number" id="manualAge" placeholder="Enter age" />
+
+  <button onclick="calculateAge()">Get Age</button>
+
+  <div id="result"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script>
+async function extractDOBFromImage(file) {
+  const { data } = await Tesseract.recognize(file, 'eng');
+  const text = data.text;
+  window.lastOCR = text;
+
+  // Match 'Date of Birth:' followed by DD/MM/YYYY or DD-MM-YYYY
+  const dobRegex = /Date of Birth[:\s]*([0-3]?\d[\/-][0-1]?\d[\/-]\d{4})/i;
+  const match = text.match(dobRegex);
+
+  if (match) {
+    let dob = match[1];
+    // Normalize to YYYY-MM-DD for input[type="date"]
+    const parts = dob.split(/[\/-]/);
+    const formatted = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    return formatted;
+  }
+
+  return null;
+}
+
+async function calculateAge() {
+  const fileInput = document.querySelector('input[type="file"]');
+  const dobInput = document.getElementById("dob");
+  const manualAge = document.getElementById("manualAge").value;
+  const result = document.getElementById("result");
+
+  if (manualAge) {
+    result.innerText = `Age: ${manualAge}`;
+    return;
+  }
+
+  let dob = dobInput.value;
+
+  if (!dob && fileInput.files.length > 0) {
+    result.innerText = "Scanning image...";
+    const extracted = await extractDOBFromImage(fileInput.files[0]);
+    if (extracted) {
+      dobInput.value = extracted;
+      dob = extracted;
+    } else {
+      result.innerHTML = "DOB not detected.<br><b>Debug OCR:</b><br>" + (window.lastOCR || "No OCR text");
+      return;
+    }
+  }
+
+  if (!dob) {
+    result.innerText = "Please add DOB or upload ID image.";
+    return;
+  }
+
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  result.innerText = `Age: ${age}`;
+}
+</script>
+
+</body>
+</html>
