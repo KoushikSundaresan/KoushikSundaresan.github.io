@@ -88,9 +88,10 @@
 
 <div class="card">
   <h2>Age Finder</h2>
-  <p>Nothing is taken into our server because we dont have one, this is just a static site all coversions happen on your end</p>
-  <label>Upload ID Image (Date Extract Enabled)</label>
-  <input type="file" accept="image/*" />
+
+  <label>Take Photo or Upload ID</label>
+  <!-- Added capture="environment" to allow phone camera -->
+  <input type="file" accept="image/*" capture="environment" />
 
   <label>Enter Date of Birth</label>
   <input type="date" id="dob" />
@@ -151,7 +152,7 @@ async function calculateAge() {
   }
 
   if (!dob) {
-    result.innerText = "Please add DOB or upload ID image.";
+    result.innerText = "Please add DOB or upload/take ID photo.";
     return;
   }
 
