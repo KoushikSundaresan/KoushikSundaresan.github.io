@@ -1,87 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Age Finder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Age Finder (Hybrid + Progress)</title>
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #dbe6f6, #c5796d);
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #dbe6f6, #c5796d);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  width: 90%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transition: transform .3s ease;
+}
+.card:hover { transform: scale(1.02); }
+h2 { text-align: center; margin-bottom: 20px; color: #222; }
+label { font-weight: bold; display: block; margin-top: 15px; color: #222; }
+input[type="number"], input[type="file"], select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.7);
+  font-size: 16px;
+  box-sizing: border-box;
+}
+button { width: 100%; margin-top: 20px; padding: 12px; border-radius: 12px; border: none; background: #333; color: #fff; font-size: 16px; cursor: pointer; transition: 0.25s; }
+button:hover { background: #111; }
+#year-container { display: flex; overflow-x: auto; gap: 10px; padding: 5px 0; margin-top: 5px; margin-bottom: 10px; }
+#year-container::-webkit-scrollbar { display: none; }
+#year-container button { padding: 10px 20px; border-radius: 12px; border: none; background: #333; color:#fff; cursor:pointer; white-space:nowrap; }
+#year-container button.selected { background:#111; }
+#result { margin-top: 20px; font-size: 20px; text-align: center; font-weight: bold; color: #222; }
+canvas { display:none; }
 
-  .card {
-    width: 90%;
-    max-width: 420px;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    transition: transform .3s ease;
-  }
-
-  .card:hover {
-    transform: scale(1.02);
-  }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
-  }
-
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
-    color: #222;
-  }
-
-  input[type="date"], input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    background: rgba(255,255,255,0.7);
-    font-size: 16px;
-  }
-
-  input[type="file"] {
-    margin-top: 10px;
-  }
-
-  button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    background: #333;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.25s;
-  }
-
-  button:hover {
-    background: #111;
-  }
-
-  #result {
-    margin-top: 20px;
-    font-size: 20px;
-    text-align: center;
-    font-weight: bold;
-    color: #222;
-  }
+/* Progress bar and spinner */
+#progress-container {
+  display:none;
+  margin-top: 15px;
+}
+#progress-bar {
+  width: 100%;
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 16px;
+  margin-top: 5px;
+}
+#progress-bar-inner {
+  width: 0%;
+  height: 100%;
+  background: #333;
+  transition: width 0.2s;
+}
+#spinner {
+  display:inline-block;
+  width:20px;height:20px;
+  border:3px solid #333;
+  border-top:3px solid #fff;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin-left:10px;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -90,80 +84,146 @@
   <h2>Age Finder</h2>
 
   <label>Take Photo or Upload ID</label>
-  <!-- Added capture="environment" to allow phone camera -->
   <input type="file" accept="image/*" capture="environment" />
 
   <label>Enter Date of Birth</label>
-  <input type="date" id="dob" />
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <input type="number" id="day" placeholder="Day" min="1" max="31" style="flex:1;">
+    <select id="month" style="flex:1;">
+      <option value="">Month</option>
+      ${[...Array(12).keys()].map(i=>`<option value="${i+1}">${i+1}</option>`).join('')}
+    </select>
+  </div>
 
-  <label>OR Manually Enter Age</label>
-  <input type="number" id="manualAge" placeholder="Enter age" />
+  <label>Year</label>
+  <div id="year-container"></div>
 
   <button onclick="calculateAge()">Get Age</button>
+  
+  <div id="progress-container">
+    <span>Scanning...</span><div id="spinner"></div>
+    <div id="progress-bar"><div id="progress-bar-inner"></div></div>
+  </div>
 
   <div id="result"></div>
 </div>
 
+<canvas id="cv-canvas"></canvas>
+
+<script src="https://docs.opencv.org/4.x/opencv.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 <script>
-async function extractDOBFromImage(file) {
-  const { data } = await Tesseract.recognize(file, 'eng');
+// Year picker
+const yearContainer = document.getElementById('year-container');
+let selectedYear = null;
+for(let y=2000; y<=2015; y++){
+  const btn = document.createElement('button');
+  btn.innerText = y;
+  btn.addEventListener('click', ()=> {
+    selectedYear = y;
+    document.querySelectorAll('#year-container button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+  yearContainer.appendChild(btn);
+}
+
+// Preprocess image
+function preprocessImage(file){
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.getElementById('cv-canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img,0,0);
+        let src = cv.imread(canvas);
+        cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY,0);
+        cv.medianBlur(src, src, 3);
+        cv.adaptiveThreshold(src, src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY,11,2);
+        cv.imshow(canvas, src);
+        const dataUrl = canvas.toDataURL('image/png');
+        src.delete();
+        resolve(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Extract DOB with progress
+async function extractDOBFromImage(file){
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar-inner');
+  progressContainer.style.display = 'block';
+  progressBar.style.width = '0%';
+
+  const processedDataUrl = await preprocessImage(file);
+
+  const { data } = await Tesseract.recognize(processedDataUrl, 'eng', {
+    logger: m => {
+      if(m.status === 'recognizing text' && m.progress){
+        progressBar.style.width = (m.progress*100).toFixed(0)+'%';
+      }
+    }
+  });
+  progressContainer.style.display = 'none';
+
   const text = data.text;
   window.lastOCR = text;
 
-  // Match 'Date of Birth:' followed by DD/MM/YYYY or DD-MM-YYYY
-  const dobRegex = /Date of Birth[:\s]*([0-3]?\d[\/-][0-1]?\d[\/-]\d{4})/i;
+  const dobRegex = /\b(?:Date of Birth|DOB|Birth Date)?[:\s]*([0-3]?\d[\/\-.][0-1]?\d[\/\-.]\d{4})/i;
   const match = text.match(dobRegex);
-
-  if (match) {
-    let dob = match[1];
-    // Normalize to YYYY-MM-DD for input[type="date"]
-    const parts = dob.split(/[\/-]/);
-    const formatted = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-    return formatted;
+  if(match){
+    const [day,month,year] = match[1].split(/[\/\-.]/);
+    return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
   }
-
+  // fallback
+  const fallbackRegex = /([0-3]?\d[\/\-.][0-1]?\d[\/\-.]\d{4})/;
+  const fallbackMatch = text.match(fallbackRegex);
+  if(fallbackMatch){
+    const [day,month,year] = fallbackMatch[1].split(/[\/\-.]/);
+    return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+  }
   return null;
 }
 
-async function calculateAge() {
+// Calculate age
+async function calculateAge(){
   const fileInput = document.querySelector('input[type="file"]');
-  const dobInput = document.getElementById("dob");
-  const manualAge = document.getElementById("manualAge").value;
-  const result = document.getElementById("result");
+  const day = document.getElementById('day').value.trim();
+  const month = document.getElementById('month').value;
+  const result = document.getElementById('result');
 
-  if (manualAge) {
-    result.innerText = `Age: ${manualAge}`;
-    return;
-  }
+  let dob = null;
 
-  let dob = dobInput.value;
-
-  if (!dob && fileInput.files.length > 0) {
+  if(day && month && selectedYear){
+    if(day<1 || day>31){ result.innerText="Invalid day."; return; }
+    dob = `${selectedYear}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+  } else if(fileInput.files.length>0){
     result.innerText = "Scanning image...";
-    const extracted = await extractDOBFromImage(fileInput.files[0]);
-    if (extracted) {
-      dobInput.value = extracted;
-      dob = extracted;
-    } else {
-      result.innerHTML = "DOB not detected.<br><b>Debug OCR:</b><br>" + (window.lastOCR || "No OCR text");
+    dob = await extractDOBFromImage(fileInput.files[0]);
+    if(!dob){
+      result.innerHTML = "DOB not detected.<br><b>Debug OCR:</b><br>"+(window.lastOCR||"No OCR text");
       return;
     }
-  }
-
-  if (!dob) {
-    result.innerText = "Please add DOB or upload/take ID photo.";
+  } else {
+    result.innerText = "Please select DOB or upload/take ID photo.";
     return;
   }
 
   const birthDate = new Date(dob);
+  if(isNaN(birthDate.getTime())){ result.innerText = "Invalid date detected."; return; }
+
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  if(m<0 || (m===0 && today.getDate()<birthDate.getDate())) age--;
   result.innerText = `Age: ${age}`;
 }
 </script>
-
 </body>
 </html>
