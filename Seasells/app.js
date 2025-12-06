@@ -9,6 +9,14 @@ const productsData = [
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
+  {
+    "id": "002",
+    "name": "Lofi",
+    "image": "1.jpg",
+    "price": "10 AED",
+    "category": "Bracelet",
+    "desc": "Handmade stone beads on waxed cord."
+  },
 ];
 
 function loadProducts(){
