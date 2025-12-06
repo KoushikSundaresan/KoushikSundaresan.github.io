@@ -3,11 +3,11 @@
 const productsData = [
   {
     "id": "001",
-    "name": "Blue Stone Bracelet",
+    "name": "Peacock",
     "image": "1.jpg",
-    "price": "20 AED",
+    "price": "10 AED",
     "category": "Bracelet",
-    "desc": "Handmade blue stone beads on waxed cord."
+    "desc": "Handmade stone beads on waxed cord."
   },
 ];
 
