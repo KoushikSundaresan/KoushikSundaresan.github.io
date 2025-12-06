@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAQ — Seasells</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="alternate icon" type="image/png" href="../assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../main.css">
+<link rel="stylesheet" href="../ui.css">
+<style>
+.faq-container {
+  margin-top: 24px;
+}
+
+.faq-item {
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.faq-question {
+  padding: 18px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.faq-question:hover {
+  color: var(--gold-light);
+}
+
+.faq-icon {
+  transition: transform 0.3s ease;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.faq-item.active .faq-icon {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+  padding: 0 20px;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  padding: 0 20px 18px 20px;
+}
+
+.faq-answer p {
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.quiz-container {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quiz-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.quiz-question {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.quiz-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.quiz-option.selected {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--accent);
+}
+
+.quiz-option.correct {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: var(--gold);
+}
+
+.quiz-option.wrong {
+  background: rgba(244, 63, 94, 0.2);
+  border-color: #f43f5e;
+}
+
+.quiz-result {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 16px;
+  min-height: 20px;
+}
+
+.quiz-result.success {
+  color: var(--gold-light);
+  font-weight: 600;
+}
+</style>
+</head><body>
+<div class="container" style="padding-top:20px">
+  <div class="glass" style="padding:32px">
+    <h1>FAQ</h1>
+    
+    <div class="faq-container">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How do I pay?</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Cash on pickup. We accept cash payments when you collect your order on campus.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Do you ship?</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Not in v1 — campus pickup only. We're keeping it local for now!</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How long does it take to make an order?</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Each piece is handcrafted with care. Typically 2-3 days after order confirmation.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I customize my order?</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! Mention your preferences in the order form, and we'll do our best to accommodate.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-title">🧩 Quick Trinket Quiz</div>
+      <div class="quiz-question" id="quiz-question">What material do we primarily use?</div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-result" id="quiz-result"></div>
+    </div>
+  </div>
+</div>
+<script>
+// FAQ Accordion
+function toggleFaq(element) {
+  const faqItem = element.closest('.faq-item');
+  const isActive = faqItem.classList.contains('active');
+  
+  // Close all other FAQs
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  
+  // Toggle current FAQ
+  if (!isActive) {
+    faqItem.classList.add('active');
+  }
+}
+
+// Quiz
+const quizQuestions = [
+  {
+    question: "What material do we primarily use?",
+    options: ["Plastic", "Handcrafted beads & natural materials", "Metal only", "Synthetic fibers"],
+    correct: 1
+  },
+  {
+    question: "Where can you pick up your order?",
+    options: ["Anywhere", "On campus only", "We ship everywhere", "At the mall"],
+    correct: 1
+  },
+  {
+    question: "What payment method do we accept?",
+    options: ["Credit card", "Cash on pickup", "Cryptocurrency", "PayPal"],
+    correct: 1
+  }
+];
+
+let currentQuiz = 0;
+let selectedOption = null;
+
+function initQuiz() {
+  const quiz = quizQuestions[currentQuiz];
+  document.getElementById('quiz-question').textContent = quiz.question;
+  
+  const optionsContainer = document.getElementById('quiz-options');
+  optionsContainer.innerHTML = '';
+  selectedOption = null;
+  document.getElementById('quiz-result').textContent = '';
+  document.getElementById('quiz-result').className = 'quiz-result';
+  
+  quiz.options.forEach((option, index) => {
+    const optionEl = document.createElement('div');
+    optionEl.className = 'quiz-option';
+    optionEl.textContent = option;
+    optionEl.onclick = () => selectOption(index, optionEl, quiz);
+    optionsContainer.appendChild(optionEl);
+  });
+}
+
+function selectOption(index, element, quiz) {
+  if (selectedOption !== null) return;
+  
+  selectedOption = index;
+  element.classList.add('selected');
+  
+  setTimeout(() => {
+    if (index === quiz.correct) {
+      element.classList.remove('selected');
+      element.classList.add('correct');
+      document.getElementById('quiz-result').textContent = '🎉 Correct!';
+      document.getElementById('quiz-result').className = 'quiz-result success';
+    } else {
+      element.classList.remove('selected');
+      element.classList.add('wrong');
+      document.querySelectorAll('.quiz-option')[quiz.correct].classList.add('correct');
+      document.getElementById('quiz-result').textContent = '❌ Not quite!';
+    }
+    
+    setTimeout(() => {
+      currentQuiz = (currentQuiz + 1) % quizQuestions.length;
+      document.querySelectorAll('.quiz-option').forEach(el => {
+        el.classList.remove('selected', 'correct', 'wrong');
+      });
+      initQuiz();
+    }, 2000);
+  }, 300);
+}
+
+initQuiz();
+</script>
+</body></html>
