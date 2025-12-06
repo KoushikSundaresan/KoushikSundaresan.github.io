@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Seasells</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="alternate icon" type="image/png" href="../assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../main.css">
+<link rel="stylesheet" href="../ui.css">
+<style>
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.game-container {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.trinket-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+  max-width: 240px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trinket-cell {
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.trinket-cell:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.trinket-cell.found {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  border-color: var(--gold);
+  animation: foundPulse 0.5s ease;
+}
+
+@keyframes foundPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.game-message {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+.game-message.success {
+  color: var(--gold-light);
+  font-weight: 600;
+}
+</style>
+</head><body>
+<div class="container" style="padding-top:20px">
+  <div class="glass" style="padding:32px">
+    <h1>About Seasells</h1>
+    <p>Seasells started as a college passion project — a tiny team, big ideas, handcrafted trinkets made with care.</p>
+    <p>We sell on campus only. Orders come through email, pickup in college. Cash payments.</p>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" data-target="150">0</div>
+        <div class="stat-label">Handcrafted Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="98">0</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="12">0</div>
+        <div class="stat-label">Months Running</div>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div class="game-title">🎯 Find the Hidden Trinket</div>
+      <div class="trinket-grid" id="trinket-grid"></div>
+      <div class="game-message" id="game-message">Click the cells to find the hidden trinket!</div>
+    </div>
+  </div>
+</div>
+<script>
+// Animated counter
+function animateCounter(element) {
+  const target = parseInt(element.getAttribute('data-target'));
+  const duration = 2000;
+  const increment = target / (duration / 16);
+  let current = 0;
+  
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      element.textContent = target;
+      clearInterval(timer);
+    } else {
+      element.textContent = Math.floor(current);
+    }
+  }, 16);
+}
+
+document.querySelectorAll('.stat-number').forEach(counter => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  observer.observe(counter);
+});
+
+// Find the trinket game
+const gridSize = 9;
+let foundTrinket = false;
+let attempts = 0;
+const trinketPosition = Math.floor(Math.random() * gridSize);
+
+function initGame() {
+  const grid = document.getElementById('trinket-grid');
+  const message = document.getElementById('game-message');
+  grid.innerHTML = '';
+  foundTrinket = false;
+  attempts = 0;
+  message.textContent = 'Click the cells to find the hidden trinket!';
+  message.className = 'game-message';
+  
+  for (let i = 0; i < gridSize; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'trinket-cell';
+    cell.onclick = () => checkCell(i, cell);
+    grid.appendChild(cell);
+  }
+}
+
+function checkCell(index, cell) {
+  if (foundTrinket || cell.classList.contains('found')) return;
+  
+  attempts++;
+  
+  if (index === trinketPosition) {
+    cell.classList.add('found');
+    cell.textContent = '✨';
+    foundTrinket = true;
+    const message = document.getElementById('game-message');
+    message.textContent = `🎉 Found it in ${attempts} ${attempts === 1 ? 'try' : 'tries'}! Refresh to play again.`;
+    message.classList.add('success');
+  } else {
+    cell.style.opacity = '0.3';
+    cell.style.cursor = 'not-allowed';
+    const message = document.getElementById('game-message');
+    message.textContent = `Keep looking... (${attempts} ${attempts === 1 ? 'try' : 'tries'})`;
+  }
+}
+
+initGame();
+</script>
+</body></html>
