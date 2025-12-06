@@ -9,14 +9,6 @@ const productsData = [
     "category": "Bracelet",
     "desc": "Handmade blue stone beads on waxed cord."
   },
-  {
-    "id": "002",
-    "name": "Sunset Charm",
-    "image": "3.jpg",
-    "price": "25 AED",
-    "category": "Trinket",
-    "desc": "Sunset-orange charm with brass accents."
-  }
 ];
 
 function loadProducts(){
