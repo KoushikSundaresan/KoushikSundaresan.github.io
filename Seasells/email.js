@@ -6,5 +6,5 @@ function sendOrder(formId, productName){
   const note = encodeURIComponent(f.querySelector('[name=note]').value || '');
   const subject = encodeURIComponent('Order - ' + productName);
   const body = encodeURIComponent('Hi Koushik,\n\nI would like to order: ' + productName + '\n\nName: ')+name+encodeURIComponent('\nPhone: ')+phone+encodeURIComponent('\nNote: ')+note;
-  window.location.href = `mailto:koushik.flink@gmail.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:koushikflink@gmail.com?subject=${subject}&body=${body}`;
 }
