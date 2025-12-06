@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — Seasells</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="alternate icon" type="image/png" href="../assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../main.css">
+<link rel="stylesheet" href="../ui.css">
+<style>
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-item {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.color-match-game {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.color-palette {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.color-option {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.color-option.selected {
+  border-color: var(--gold);
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+}
+
+.target-color {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-message {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 16px;
+  min-height: 20px;
+}
+
+.game-message.success {
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head><body>
+<div class="container" style="padding-top:20px">
+  <div class="glass" style="padding:32px">
+    <h1>Contact Us</h1>
+    
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <strong style="color: var(--gold-light); display: block; margin-bottom: 8px;">📧 Email</strong>
+          <a href="mailto:koushik.flink@gmail.com" style="color: var(--text-primary); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-light)'" onmouseout="this.style.color='var(--text-primary)'">koushik.flink@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <strong style="color: var(--gold-light); display: block; margin-bottom: 8px;">📱 Instagram</strong>
+          <a href="https://instagram.com/yourbrand" target="_blank" style="color: var(--text-primary); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-light)'" onmouseout="this.style.color='var(--text-primary)'">@yourbrand</a>
+        </div>
+        <div class="contact-item">
+          <strong style="color: var(--gold-light); display: block; margin-bottom: 8px;">📍 Pickup</strong>
+          <span style="color: var(--text-secondary);">Available on campus. Cash only.</span>
+        </div>
+      </div>
+      
+      <div class="color-match-game">
+        <div class="game-title">🎨 Color Match Challenge</div>
+        <div class="target-color" id="target-color"></div>
+        <div class="color-palette" id="color-palette"></div>
+        <div class="game-message" id="game-message">Match the target color above!</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// Color matching game - similar shades that are still differentiable
+const colors = [
+  { name: 'Indigo', value: '#6366f1' },
+  { name: 'Indigo Light', value: '#818cf8' },
+  { name: 'Indigo Dark', value: '#4f46e5' },
+  { name: 'Indigo Medium', value: '#7c3aed' },
+  { name: 'Purple', value: '#9333ea' },
+  { name: 'Purple Light', value: '#a855f7' },
+  { name: 'Violet', value: '#8b5cf6' },
+  { name: 'Violet Light', value: '#a78bfa' }
+];
+
+let targetColor;
+let selectedColor = null;
+let score = 0;
+let round = 0;
+
+function initColorGame() {
+  // Pick random target color
+  targetColor = colors[Math.floor(Math.random() * colors.length)];
+  document.getElementById('target-color').style.background = targetColor.value;
+  
+  // Shuffle and pick 4 random options (including the target)
+  const options = [targetColor, ...colors.filter(c => c.value !== targetColor.value).sort(() => Math.random() - 0.5).slice(0, 3)];
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  
+  const palette = document.getElementById('color-palette');
+  palette.innerHTML = '';
+  
+  shuffled.forEach(color => {
+    const option = document.createElement('div');
+    option.className = 'color-option';
+    option.style.background = color.value;
+    option.onclick = () => selectColor(color, option);
+    palette.appendChild(option);
+  });
+  
+  selectedColor = null;
+  round++;
+  document.getElementById('game-message').textContent = `Round ${round} - Match the color!`;
+  document.getElementById('game-message').className = 'game-message';
+}
+
+function selectColor(color, element) {
+  if (selectedColor) return;
+  
+  selectedColor = color;
+  element.classList.add('selected');
+  
+  setTimeout(() => {
+    if (color.value === targetColor.value) {
+      score++;
+      document.getElementById('game-message').textContent = `🎉 Correct! Score: ${score}. Next round...`;
+      document.getElementById('game-message').className = 'game-message success';
+      setTimeout(() => {
+        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+        initColorGame();
+      }, 1500);
+    } else {
+      document.getElementById('game-message').textContent = `❌ Not quite! It was ${targetColor.name}. Try again!`;
+      setTimeout(() => {
+        element.classList.remove('selected');
+        selectedColor = null;
+        document.getElementById('game-message').textContent = `Score: ${score} - Match the color!`;
+      }, 2000);
+    }
+  }, 300);
+}
+
+initColorGame();
+</script>
+</body></html>
