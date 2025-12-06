@@ -1,0 +1,7 @@
+/* animations.css - micro interactions */
+@keyframes floaty {
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+.float{animation:floaty 3.6s ease-in-out infinite}
