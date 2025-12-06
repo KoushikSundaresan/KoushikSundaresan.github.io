@@ -1,0 +1,64 @@
+/* ui.css - component refinements */
+.header .logo small{
+  display: block;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+.grid .meta{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  gap: 12px;
+}
+
+.price{
+  font-weight: 800;
+  color: #1a1d2e;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+.card h3{
+  margin: 12px 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+input, textarea{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus{
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+input::placeholder, textarea::placeholder{
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+label{
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
