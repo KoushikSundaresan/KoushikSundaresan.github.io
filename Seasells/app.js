@@ -62,8 +62,9 @@ function loadProducts(){
         <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
         <div class="meta">
           <div class="pill">${p.category || 'Bracelet'}</div>
-          ${p.glow ? `<div class="glow-tag">✨ Glow in the Dark</div>` : ''}
           <div class="price">${p.price || '—'}</div>
+          <br>
+          ${p.glow ? `<div class="glow-tag">✨ Glow in the Dark</div>` : ''}
         </div>
         <div style="margin-top:12px">
           <a class="btn" href="products/${p.id}/index.html">See More</a>
