@@ -6,6 +6,7 @@ const productsData = [
     "name": "Peacock",
     "image": "1.jpg",
     "price": "10 AED",
+    "glow": false,
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
@@ -14,6 +15,7 @@ const productsData = [
     "name": "Lofi",
     "image": "1.jpg",
     "price": "10 AED",
+    "glow": false,
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
@@ -22,6 +24,7 @@ const productsData = [
     "name": "Magma",
     "image": "1.jpg",
     "price": "15 AED",
+    "glow": true,
     "category": "Bracelet",
     "desc": "Handmade - Glow in the Dark -  stone beads on waxed cord."
   },
@@ -30,6 +33,7 @@ const productsData = [
     "name": "Pearlish",
     "image": "1.jpg",
     "price": "10 AED",
+    "glow": false,
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
@@ -38,6 +42,7 @@ const productsData = [
     "name": "Seaside",
     "image": "1.jpg",
     "price": "10 AED",
+    "glow": false,
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
@@ -55,6 +60,9 @@ function loadProducts(){
         <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
         <div class="meta">
           <div class="pill">${p.category || 'Bracelet'}</div>
+          if (p.glow) {
+          el.innerHTML += `<div class="glow-tag">✨ Glow in the Dark</div>`;
+          }
           <div class="price">${p.price || '—'}</div>
         </div>
         <div style="margin-top:12px">
