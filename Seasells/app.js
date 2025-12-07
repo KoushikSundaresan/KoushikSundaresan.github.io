@@ -79,9 +79,6 @@ function loadProducts(){
     <a class="btn" href="products/${p.id}/index.html">See More</a>
   </div>
 `;
-
-      `;
-
       grid.appendChild(el);
     });
 
