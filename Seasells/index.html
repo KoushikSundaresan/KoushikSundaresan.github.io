@@ -4,16 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
 <title>Seasells — Handmade Trinkets</title>
+
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="alternate icon" type="image/png" href="assets/logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="ui.css">
 <link rel="stylesheet" href="animations.css">
+
+<style>
+  /* Simple hero styling */
+  .hero {
+    width: 100%;
+    background: url("assets/hero.jpg") center/cover no-repeat;
+    padding: 80px 20px;
+    border-radius: 18px;
+    color: #fff;
+    text-align: center;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(2px);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 4;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .hero-btn {
+    padding: 12px 28px;
+    background: #ffd54f;
+    color: #000;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+
+  /* Space between hero & products */
+  .section-products {
+    margin-top: 40px !important;
+  }
+</style>
+
 </head>
 <body>
+
   <!-- header -->
   <header class="main-header">
     <div class="container">
@@ -31,14 +88,28 @@
     </div>
   </header>
 
+  <!-- HERO SECTION -->
   <main class="container">
-    <section style="margin-top:18px">
+    
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Handmade. Heart-made.</h1>
+        <p>Bracelets, charms, and trinkets crafted in small batches — just for you.</p>
+        <a href="#product-grid" class="hero-btn">Browse Products</a>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="section-products">
       <div id="product-grid" class="grid"></div>
     </section>
+
   </main>
 
   <!-- footer -->
   <script src="app.js"></script>
   <script src="email.js"></script>
+
 </body>
 </html>
