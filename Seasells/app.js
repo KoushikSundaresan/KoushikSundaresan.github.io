@@ -52,28 +52,31 @@ function loadProducts(){
   try{
     const grid = document.getElementById('product-grid');
     grid.innerHTML = '';
+
     productsData.forEach(p=>{
       const el = document.createElement('div');
       el.className = 'glass card';
+
       el.innerHTML = `
-        <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}" onerror="this.src='products/${p.id}/1.jpg'">
+        <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}">
         <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
         <div class="meta">
           <div class="pill">${p.category || 'Bracelet'}</div>
-          if (p.glow) {
-          el.innerHTML += `<div class="glow-tag">✨ Glow in the Dark</div>`;
-          }
+          ${p.glow ? `<div class="glow-tag">✨ Glow in the Dark</div>` : ''}
           <div class="price">${p.price || '—'}</div>
         </div>
         <div style="margin-top:12px">
           <a class="btn" href="products/${p.id}/index.html">See More</a>
         </div>
       `;
+
       grid.appendChild(el);
     });
-  }catch(e){
-    console.error('Failed to load products',e);
+
+  } catch(e) {
+    console.error('Failed to load products', e);
     document.getElementById('product-grid').innerHTML = '<p class="center">No products found.</p>';
   }
 }
 document.addEventListener('DOMContentLoaded', loadProducts);
+
