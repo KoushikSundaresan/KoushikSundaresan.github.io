@@ -627,3 +627,17 @@ p{
     width: 100%;
   }
 }
+.glow-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #00ffbb22;
+  color: #00ffc8;
+  border: 1px solid #00ffc8;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 8px #00ffc8aa, 0 0 16px #00ffc855 inset;
+  margin-top: 8px;
+  width: fit-content;
+}
