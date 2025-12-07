@@ -30,7 +30,7 @@ const productsData = [
   },
   {
     "id": "004",
-    "name": "Pearlish",
+    "name": "Seaside",
     "image": "1.jpg",
     "price": "10 AED",
     "glow": false,
@@ -39,7 +39,7 @@ const productsData = [
   },
   {
     "id": "005",
-    "name": "Seaside",
+    "name": "Pearlish",
     "image": "1.jpg",
     "price": "10 AED",
     "glow": false,
