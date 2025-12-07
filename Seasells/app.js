@@ -17,6 +17,30 @@ const productsData = [
     "category": "Bracelet",
     "desc": "Handmade stone beads on waxed cord."
   },
+  {
+    "id": "003",
+    "name": "Magma",
+    "image": "1.jpg",
+    "price": "15 AED",
+    "category": "Bracelet",
+    "desc": "Handmade - Glow in the Dark -  stone beads on waxed cord."
+  },
+  {
+    "id": "004",
+    "name": "Pearlish",
+    "image": "1.jpg",
+    "price": "10 AED",
+    "category": "Bracelet",
+    "desc": "Handmade stone beads on waxed cord."
+  },
+  {
+    "id": "005",
+    "name": "Seaside",
+    "image": "1.jpg",
+    "price": "10 AED",
+    "category": "Bracelet",
+    "desc": "Handmade stone beads on waxed cord."
+  },
 ];
 
 function loadProducts(){
