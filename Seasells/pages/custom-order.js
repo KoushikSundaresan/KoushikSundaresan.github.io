@@ -1,447 +1,528 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
-<title>Custom Order Builder — Seasells</title>
+// custom-order.js - Custom Order Builder Logic
 
-<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
-<link rel="alternate icon" type="image/png" href="../assets/logo.png">
+// Pricing Configuration
+const PRICING = {
+  twine: 4,
+  beads: {
+    'assorted': 2,
+    'solid': 2,
+    'single-color': 3,
+    'not-pearl': 5,
+    'glow-in-dark': 7
+  },
+  ornaments: {
+    'gold': 2,
+    'silver': 2,
+    'teddy': 3.5,
+    'stone-gold': 5,
+    'stone-silver': 5
+  },
+  minPrice: 15,
+  maxPrice: 30
+};
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+// Product Options Data
+const PRODUCT_OPTIONS = {
+  twine: [
+    { name: 'Black Twine', image: 'Black_Twine.jpg', value: 'black' },
+    { name: 'Blue Twine', image: 'Blue_Twine.jpg', value: 'blue' },
+    { name: 'Brown Twine', image: 'Brown_Twine.jpg', value: 'brown' },
+    { name: 'Orange Twine', image: 'Orange_twine.jpg', value: 'orange' },
+    { name: 'Red Twine', image: 'Red_Twine.jpg', value: 'red' },
+    { name: 'Transparent Twine', image: 'Transparent_Twine.jpg', value: 'transparent' },
+    { name: 'Yellow Twine', image: 'Yellow_Twine.jpg', value: 'yellow' }
+  ],
+  beads: [
+    { name: 'Assorted Beads', image: 'Assorted_Ornaments.jpg', category: 'assorted', value: 'assorted' },
+    { name: 'Solid Colored Beads', image: 'Solid_colored_Beads.jpg', category: 'solid', value: 'solid' },
+    { name: 'Black Beads', image: 'Black_Beads.jpg', category: 'single-color', value: 'black' },
+    { name: 'Blue Beads', image: 'blue_beads.jpg', category: 'single-color', value: 'blue' },
+    { name: 'Brown Beads', image: 'Brown_Beads.jpg', category: 'single-color', value: 'brown' },
+    { name: 'Cloud Pink Beads', image: 'Cloud-Pink_Beads.jpg', category: 'single-color', value: 'cloud-pink' },
+    { name: 'Emerald Beads', image: 'Emerald_beads.jpg', category: 'single-color', value: 'emerald' },
+    { name: 'Green Yellow Beads', image: 'Green-Yellow_Beads.jpg', category: 'single-color', value: 'green-yellow' },
+    { name: 'Grey Beads', image: 'Grey_Beads.jpg', category: 'single-color', value: 'grey' },
+    { name: 'Grey Violet Beads', image: 'Grey-Violet_Beads.jpg', category: 'single-color', value: 'grey-violet' },
+    { name: 'Olive Beads', image: 'Olive_Beads.jpg', category: 'single-color', value: 'olive' },
+    { name: 'Pastel Green Beads', image: 'pastel-green_beads.jpg', category: 'single-color', value: 'pastel-green' },
+    { name: 'Pink Beads', image: 'Pink_Beads.jpg', category: 'single-color', value: 'pink' },
+    { name: 'Purple Beads', image: 'Purple_Beads.jpg', category: 'single-color', value: 'purple' },
+    { name: 'Red Beads', image: 'Red_Beads.jpg', category: 'single-color', value: 'red' },
+    { name: 'Sap Green Beads', image: 'Sap-Green_Beads.jpg', category: 'single-color', value: 'sap-green' },
+    { name: 'Sea Beads', image: 'Sea_Beads.jpg', category: 'single-color', value: 'sea' },
+    { name: 'Tan Beads', image: 'Tan_Beads.jpg', category: 'single-color', value: 'tan' },
+    { name: 'Violet Beads', image: 'Violet-beads.jpg', category: 'single-color', value: 'violet' },
+    { name: 'Yellow Beads', image: 'Yellow_Beads.jpg', category: 'single-color', value: 'yellow' },
+    { name: 'Yellow Ochre Beads', image: 'yellow-Ochre_beads.jpg', category: 'single-color', value: 'yellow-ochre' },
+    { name: 'Not Pearl Beads', image: 'not-Pearl_Beads.jpg', category: 'not-pearl', value: 'not-pearl' },
+    { name: 'Glow in Dark Beads', image: 'Assorted_Glow-In-Dark_Beads.jpg', category: 'glow-in-dark', value: 'glow-in-dark' }
+  ],
+  ornaments: [
+    { name: 'Gold Ornament', image: 'Gold_Ornament.jpg', category: 'gold', value: 'gold' },
+    { name: 'Silver Ornament', image: 'Silver_Ornament.jpg', category: 'silver', value: 'silver' },
+    { name: 'Teddy Ornament', image: 'teddy_Ornament.jpg', category: 'teddy', value: 'teddy' },
+    { name: 'Stone Gold Ornament', image: 'Stone-Gold_Ornament.jpg', category: 'stone-gold', value: 'stone-gold' },
+    { name: 'Stone Silver Ornament', image: 'Stone-Silver_Ornament.jpg', category: 'stone-silver', value: 'stone-silver' }
+  ]
+};
 
-<link rel="stylesheet" href="../main.css">
-<link rel="stylesheet" href="../ui.css">
-<link rel="stylesheet" href="../animations.css">
+// State Management
+let orderState = {
+  productType: null,
+  twine: null,
+  beads: [],
+  ornaments: []
+};
 
-<style>
-  .builder-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 24px;
-  }
+// Initialize the builder
+function initBuilder() {
+  renderTwineOptions();
+  renderBeadsOptions();
+  renderOrnamentsOptions();
+  setupEventListeners();
+  updatePrice();
+}
 
-  .step-section {
-    margin-bottom: 32px;
-  }
+// Render Twine Options
+function renderTwineOptions() {
+  const grid = document.getElementById('twine-grid');
+  grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => `
+    <label class="option-card">
+      <input type="radio" name="twine" value="${twine.value}" required>
+      <div class="option-card-content">
+        <img src="../assets/Customs/${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+        <div class="option-name">${twine.name}</div>
+        <div class="option-price">+${PRICING.twine} AED</div>
+      </div>
+    </label>
+  `).join('');
+}
 
-  .step-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .step-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-  }
-
-  .step-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-
-  .step-subtitle {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  .option-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-  }
-
-  .option-card {
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .option-card input[type="radio"],
-  .option-card input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .option-card-content {
-    background: var(--glass-bg);
-    border: 2px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-
-  .option-card:hover .option-card-content {
-    border-color: var(--accent);
-    background: var(--glass-hover);
-  }
-
-  .option-card input:checked + .option-card-content {
-    border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.2);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  }
-
-  .option-image {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 8px;
-  }
-
-  .option-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-  }
-
-  .option-price {
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 600;
-  }
-
-  .price-display {
-    position: sticky;
-    bottom: 0;
-    background: rgba(15, 23, 42, 0.98);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    margin: 40px -24px -40px;
-    border-radius: 20px 20px 0 0;
-  }
-
-  .price-breakdown {
-    margin-bottom: 16px;
-  }
-
-  .price-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--text-secondary);
-  }
-
-  .price-row.total {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 8px;
-    padding-top: 12px;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-
-  .price-row.total .price-value {
-    color: var(--gold);
-    font-size: 24px;
-  }
-
-  .preview-summary {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-top: 32px;
-  }
-
-  .summary-item {
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .summary-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .summary-label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  .summary-value {
-    font-size: 16px;
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  .required-badge {
-    display: inline-block;
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-left: 8px;
-  }
-
-  .optional-badge {
-    display: inline-block;
-    background: rgba(156, 163, 175, 0.2);
-    color: #d1d5db;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-left: 8px;
-  }
-
-  .btn-submit {
-    width: 100%;
-    padding: 16px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 20px;
-  }
-
-  .btn-submit:hover {
-    background: var(--accent-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .order-form {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .form-input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--glass-border);
-    background: var(--glass-bg);
-    color: var(--text-primary);
-    font-size: 14px;
-    font-family: inherit;
-  }
-
-  .form-input:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: var(--glass-hover);
-  }
-
-  .validation-error {
-    color: #fca5a5;
-    font-size: 12px;
-    margin-top: 4px;
-    display: none;
-  }
-
-  .validation-error.show {
-    display: block;
-  }
-</style>
-</head>
-<body>
-
-  <!-- header -->
-  <header class="main-header">
-    <div class="container">
-      <nav class="header-nav">
-        <div class="header-brand">
-          <div class="logo"><img src="../assets/logo.png" alt="logo"></div>
-          <div class="brand-text">Seasells</div>
+// Render Beads Options
+function renderBeadsOptions() {
+  const grid = document.getElementById('beads-grid');
+  grid.innerHTML = PRODUCT_OPTIONS.beads.map(bead => {
+    const price = PRICING.beads[bead.category] || 0;
+    return `
+      <label class="option-card">
+        <input type="checkbox" name="beads" value="${bead.value}" data-category="${bead.category}">
+        <div class="option-card-content">
+          <img src="../assets/Customs/${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+          <div class="option-name">${bead.name}</div>
+          <div class="option-price">+${price} AED</div>
         </div>
-        <div class="header-menu">
-          <a href="../index.html" class="nav-link">Home</a>
-          <a href="about.html" class="nav-link">About</a>
-          <a href="contact.html" class="nav-link">Contact</a>
-          <a href="faq.html" class="nav-link">FAQ</a>
+      </label>
+    `;
+  }).join('');
+}
+
+// Render Ornaments Options
+function renderOrnamentsOptions() {
+  const grid = document.getElementById('ornaments-grid');
+  grid.innerHTML = PRODUCT_OPTIONS.ornaments.map(ornament => {
+    const price = PRICING.ornaments[ornament.category] || 0;
+    return `
+      <label class="option-card">
+        <input type="checkbox" name="ornaments" value="${ornament.value}" data-category="${ornament.category}">
+        <div class="option-card-content">
+          <img src="../assets/Customs/${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+          <div class="option-name">${ornament.name}</div>
+          <div class="option-price">+${price} AED</div>
         </div>
-      </nav>
+      </label>
+    `;
+  }).join('');
+}
+
+// Setup Event Listeners (using event delegation to prevent duplicates)
+let listenersAttached = false;
+
+function setupEventListeners() {
+  // Prevent multiple event listener attachments
+  if (listenersAttached) return;
+  listenersAttached = true;
+
+  // Product Type
+  document.querySelectorAll('input[name="productType"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      orderState.productType = e.target.value;
+      updatePrice();
+      updatePreview();
+    });
+  });
+
+  // Use event delegation for dynamic elements
+  document.addEventListener('change', (e) => {
+    // Twine (radio - only one)
+    if (e.target.name === 'twine') {
+      orderState.twine = e.target.value;
+      updatePrice();
+      updatePreview();
+    }
+    
+    // Beads (checkboxes - multiple)
+    if (e.target.name === 'beads') {
+      const checked = Array.from(document.querySelectorAll('input[name="beads"]:checked'))
+        .map(cb => ({
+          value: cb.value,
+          category: cb.dataset.category,
+          name: PRODUCT_OPTIONS.beads.find(b => b.value === cb.value)?.name
+        }));
+      orderState.beads = checked;
+      updatePrice();
+      updatePreview();
+    }
+    
+    // Ornaments (checkboxes - multiple)
+    if (e.target.name === 'ornaments') {
+      const checked = Array.from(document.querySelectorAll('input[name="ornaments"]:checked'))
+        .map(cb => ({
+          value: cb.value,
+          category: cb.dataset.category,
+          name: PRODUCT_OPTIONS.ornaments.find(o => o.value === cb.value)?.name
+        }));
+      orderState.ornaments = checked;
+      updatePrice();
+      updatePreview();
+    }
+  });
+}
+
+// Calculate Raw Price
+// Only count each category once (multiple colors of same type = one price)
+function calculateRawPrice() {
+  let total = 0;
+
+  // Twine (required)
+  if (orderState.twine) {
+    total += PRICING.twine;
+  }
+
+  // Beads: Group by category, only count each category once
+  const beadCategories = new Set();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.add(bead.category);
+      const price = PRICING.beads[bead.category] || 0;
+      total += price;
+    }
+  });
+
+  // Ornaments: Group by category, only count each category once
+  const ornamentCategories = new Set();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.add(ornament.category);
+      const price = PRICING.ornaments[ornament.category] || 0;
+      total += price;
+    }
+  });
+
+  return total;
+}
+
+// Apply Price Limits
+function applyPriceLimits(rawPrice) {
+  if (rawPrice < PRICING.minPrice) {
+    return PRICING.minPrice;
+  }
+  if (rawPrice > PRICING.maxPrice) {
+    return PRICING.maxPrice;
+  }
+  return rawPrice;
+}
+
+// Update Price Display
+function updatePrice() {
+  const rawPrice = calculateRawPrice();
+  const finalPrice = applyPriceLimits(rawPrice);
+  const breakdown = document.getElementById('price-breakdown');
+  const finalPriceEl = document.getElementById('final-price');
+
+  // Clear previous content first
+  if (!breakdown || !finalPriceEl) return;
+
+  // Build breakdown - group by category to show once per type
+  let breakdownHTML = '';
+  
+  if (orderState.twine) {
+    const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || 'Twine';
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${twineName}</span>
+        <span class="price-value">${PRICING.twine} AED</span>
+      </div>
+    `;
+  }
+
+  // Beads: Show each category only once, with count of colors
+  const beadCategories = new Map();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.set(bead.category, {
+        price: PRICING.beads[bead.category] || 0,
+        count: 1,
+        categoryName: bead.category
+      });
+    } else {
+      beadCategories.get(bead.category).count++;
+    }
+  });
+
+  beadCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'assorted': 'Assorted Beads',
+      'solid': 'Solid Colored Beads',
+      'single-color': 'Single-Color Beads',
+      'not-pearl': 'Not-Pearl Beads',
+      'glow-in-dark': 'Glow-in-Dark Beads'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.count > 1 ? ` (${data.count} colors)` : '';
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${label}${countText}</span>
+        <span class="price-value">${data.price} AED</span>
+      </div>
+    `;
+  });
+
+  // Ornaments: Show each category only once, with count
+  const ornamentCategories = new Map();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.set(ornament.category, {
+        price: PRICING.ornaments[ornament.category] || 0,
+        count: 1,
+        categoryName: ornament.category
+      });
+    } else {
+      ornamentCategories.get(ornament.category).count++;
+    }
+  });
+
+  ornamentCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'gold': 'Gold Ornament',
+      'silver': 'Silver Ornament',
+      'teddy': 'Teddy Ornament',
+      'stone-gold': 'Stone Gold Ornament',
+      'stone-silver': 'Stone Silver Ornament'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.count > 1 ? ` (${data.count})` : '';
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${label}${countText}</span>
+        <span class="price-value">${data.price} AED</span>
+      </div>
+    `;
+  });
+
+  breakdownHTML += `
+    <div class="price-row">
+      <span>Subtotal</span>
+      <span class="price-value">${rawPrice.toFixed(1)} AED</span>
     </div>
-  </header>
+  `;
 
-  <main class="builder-container">
-    <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 8px; text-align: center;">
-      Build Your Custom Order
-    </h1>
-    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">
-      Choose your style, see the price update in real-time
-    </p>
-
-    <div class="glass" style="padding: 32px; margin-bottom: 24px;">
-      
-      <!-- STEP 1: Product Type -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">1</div>
-          <div>
-            <div class="step-title">Choose Product Type <span class="required-badge">Required</span></div>
-            <div class="step-subtitle">Select what you're building</div>
-          </div>
-        </div>
-        <div class="option-grid" id="product-type-grid">
-          <label class="option-card">
-            <input type="radio" name="productType" value="Earring" required>
-            <div class="option-card-content">
-              <div class="option-name">Earring</div>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Bracelet" required>
-            <div class="option-card-content">
-              <div class="option-name">Bracelet</div>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Necklace" required>
-            <div class="option-card-content">
-              <div class="option-name">Necklace</div>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Choker" required>
-            <div class="option-card-content">
-              <div class="option-name">Choker</div>
-            </div>
-          </label>
-        </div>
-        <div class="validation-error" id="product-type-error">Please select a product type</div>
+  if (rawPrice < PRICING.minPrice) {
+    breakdownHTML += `
+      <div class="price-row" style="color: var(--gold);">
+        <span>Minimum Price Applied</span>
+        <span class="price-value">+${(PRICING.minPrice - rawPrice).toFixed(1)} AED</span>
       </div>
-
-      <!-- STEP 2: Twine -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">2</div>
-          <div>
-            <div class="step-title">Select Twine <span class="required-badge">Required</span></div>
-            <div class="step-subtitle">Choose your base twine (one only)</div>
-          </div>
-        </div>
-        <div class="option-grid" id="twine-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        <div class="validation-error" id="twine-error">Please select a twine</div>
+    `;
+  } else if (rawPrice > PRICING.maxPrice) {
+    breakdownHTML += `
+      <div class="price-row" style="color: var(--gold);">
+        <span>Maximum Price Applied</span>
+        <span class="price-value">-${(rawPrice - PRICING.maxPrice).toFixed(1)} AED</span>
       </div>
+    `;
+  }
 
-      <!-- STEP 3: Beads -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">3</div>
-          <div>
-            <div class="step-title">Select Beads <span class="optional-badge">Optional</span></div>
-            <div class="step-subtitle">Mix & match as many as you like</div>
-          </div>
-        </div>
-        <div class="option-grid" id="beads-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
+  breakdown.innerHTML = breakdownHTML;
+  finalPriceEl.textContent = `${finalPrice.toFixed(1)} AED`;
 
-      <!-- STEP 4: Ornaments -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">4</div>
-          <div>
-            <div class="step-title">Select Ornaments <span class="optional-badge">Optional</span></div>
-            <div class="step-subtitle">Add any number of ornaments</div>
-          </div>
-        </div>
-        <div class="option-grid" id="ornaments-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
+  // Show preview and form if required fields are filled
+  if (orderState.productType && orderState.twine) {
+    document.getElementById('preview-summary').style.display = 'block';
+    document.getElementById('order-form-section').style.display = 'block';
+  } else {
+    document.getElementById('preview-summary').style.display = 'none';
+    document.getElementById('order-form-section').style.display = 'none';
+  }
+}
 
-      <!-- Price Display -->
-      <div class="price-display">
-        <div class="price-breakdown" id="price-breakdown">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        <div style="text-align: center; font-size: 28px; font-weight: 800; color: var(--gold);" id="final-price">
-          0 AED
-        </div>
-      </div>
+// Update Preview Summary
+function updatePreview() {
+  const summaryContent = document.getElementById('summary-content');
+  
+  if (!orderState.productType || !orderState.twine) {
+    return;
+  }
 
-      <!-- Preview Summary -->
-      <div class="preview-summary" id="preview-summary" style="display: none;">
-        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Order Summary</h3>
-        <div id="summary-content">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
+  const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || orderState.twine;
+  const beadsList = orderState.beads.length > 0 
+    ? orderState.beads.map(b => b.name).join(', ')
+    : 'None';
+  const ornamentsList = orderState.ornaments.length > 0
+    ? orderState.ornaments.map(o => o.name).join(', ')
+    : 'None';
+  const finalPrice = applyPriceLimits(calculateRawPrice());
 
-      <!-- Order Form -->
-      <div class="order-form" id="order-form-section" style="display: none;">
-        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Your Details</h3>
-        <form id="order-form" onsubmit="event.preventDefault(); submitCustomOrder()">
-          <div class="form-group">
-            <label class="form-label">Your Name</label>
-            <input type="text" name="name" class="form-input" placeholder="Full name" required>
-            <div class="validation-error" id="name-error">Please enter your name</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" name="phone" class="form-input" placeholder="Phone number" required>
-            <div class="validation-error" id="phone-error">Please enter your phone number</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Additional Notes (Optional)</label>
-            <textarea name="note" class="form-input" placeholder="Any preferences, pickup time, etc." rows="4"></textarea>
-          </div>
-          <button type="submit" class="btn-submit" id="submit-btn">Send Order</button>
-        </form>
-      </div>
-
+  summaryContent.innerHTML = `
+    <div class="summary-item">
+      <div class="summary-label">Product Type</div>
+      <div class="summary-value">${orderState.productType}</div>
     </div>
-  </main>
+    <div class="summary-item">
+      <div class="summary-label">Twine</div>
+      <div class="summary-value">${twineName}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Beads</div>
+      <div class="summary-value">${beadsList}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Ornaments</div>
+      <div class="summary-value">${ornamentsList}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Final Price</div>
+      <div class="summary-value" style="color: var(--gold); font-size: 24px;">${finalPrice.toFixed(1)} AED</div>
+    </div>
+  `;
+}
 
-  <script src="../email.js"></script>
-  <script src="custom-order.js"></script>
-</body>
-</html>
+// Submit Custom Order
+function submitCustomOrder() {
+  // Validate required fields
+  if (!orderState.productType) {
+    document.getElementById('product-type-error').classList.add('show');
+    return;
+  } else {
+    document.getElementById('product-type-error').classList.remove('show');
+  }
+
+  if (!orderState.twine) {
+    document.getElementById('twine-error').classList.add('show');
+    return;
+  } else {
+    document.getElementById('twine-error').classList.remove('show');
+  }
+
+  const form = document.getElementById('order-form');
+  const formData = new FormData(form);
+  const name = formData.get('name');
+  const phone = formData.get('phone');
+  const note = formData.get('note') || '';
+
+  if (!name || !phone) {
+    if (!name) document.getElementById('name-error').classList.add('show');
+    if (!phone) document.getElementById('phone-error').classList.add('show');
+    return;
+  }
+
+  // Build order message
+  const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || orderState.twine;
+  const beadsList = orderState.beads.length > 0 
+    ? orderState.beads.map(b => b.name).join(', ')
+    : 'None';
+  const ornamentsList = orderState.ornaments.length > 0
+    ? orderState.ornaments.map(o => o.name).join(', ')
+    : 'None';
+  const finalPrice = applyPriceLimits(calculateRawPrice());
+  const rawPrice = calculateRawPrice();
+
+  // Build order message with correct pricing (categories counted once)
+  let orderMessage = `🎨 CUSTOM ORDER REQUEST\n\n`;
+  orderMessage += `Product Type: ${orderState.productType}\n`;
+  orderMessage += `Twine: ${twineName}\n`;
+  orderMessage += `Beads: ${beadsList}\n`;
+  orderMessage += `Ornaments: ${ornamentsList}\n\n`;
+  orderMessage += `Price Breakdown:\n`;
+  orderMessage += `  ${twineName}: ${PRICING.twine} AED\n`;
+  
+  // Beads: Group by category
+  const beadCategories = new Map();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.set(bead.category, {
+        price: PRICING.beads[bead.category] || 0,
+        names: [bead.name]
+      });
+    } else {
+      beadCategories.get(bead.category).names.push(bead.name);
+    }
+  });
+  
+  beadCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'assorted': 'Assorted Beads',
+      'solid': 'Solid Colored Beads',
+      'single-color': 'Single-Color Beads',
+      'not-pearl': 'Not-Pearl Beads',
+      'glow-in-dark': 'Glow-in-Dark Beads'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.names.length > 1 ? ` (${data.names.length} colors: ${data.names.join(', ')})` : '';
+    orderMessage += `  ${label}${countText}: ${data.price} AED\n`;
+  });
+  
+  // Ornaments: Group by category
+  const ornamentCategories = new Map();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.set(ornament.category, {
+        price: PRICING.ornaments[ornament.category] || 0,
+        names: [ornament.name]
+      });
+    } else {
+      ornamentCategories.get(ornament.category).names.push(ornament.name);
+    }
+  });
+  
+  ornamentCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'gold': 'Gold Ornament',
+      'silver': 'Silver Ornament',
+      'teddy': 'Teddy Ornament',
+      'stone-gold': 'Stone Gold Ornament',
+      'stone-silver': 'Stone Silver Ornament'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.names.length > 1 ? ` (${data.names.length})` : '';
+    orderMessage += `  ${label}${countText}: ${data.price} AED\n`;
+  });
+  
+  orderMessage += `  Subtotal: ${rawPrice.toFixed(1)} AED\n`;
+  
+  if (rawPrice < PRICING.minPrice) {
+    orderMessage += `  Minimum Applied: +${(PRICING.minPrice - rawPrice).toFixed(1)} AED\n`;
+  } else if (rawPrice > PRICING.maxPrice) {
+    orderMessage += `  Maximum Applied: -${(rawPrice - PRICING.maxPrice).toFixed(1)} AED\n`;
+  }
+  
+  orderMessage += `\n💰 FINAL PRICE: ${finalPrice.toFixed(1)} AED\n\n`;
+  orderMessage += `Customer Details:\n`;
+  orderMessage += `  Name: ${name}\n`;
+  orderMessage += `  Phone: ${phone}\n`;
+  if (note) {
+    orderMessage += `  Note: ${note}\n`;
+  }
+
+  // Send via email (using existing email.js function)
+  const subject = encodeURIComponent(`Custom Order - ${orderState.productType}`);
+  const body = encodeURIComponent(orderMessage);
+  window.location.href = `mailto:koushikflink@gmail.com?subject=${subject}&body=${body}`;
+
+  // Alternative: WhatsApp (uncomment if preferred)
+  // const whatsappMessage = encodeURIComponent(orderMessage);
+  // window.open(`https://wa.me/YOUR_WHATSAPP_NUMBER?text=${whatsappMessage}`, '_blank');
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initBuilder);
 
