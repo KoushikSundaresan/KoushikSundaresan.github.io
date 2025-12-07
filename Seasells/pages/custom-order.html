@@ -18,9 +18,88 @@
 
 <style>
   .builder-container {
-    max-width: 900px;
+    max-width: 1400px;
     margin: 40px auto;
     padding: 0 24px;
+  }
+
+  /* Two-column layout for desktop */
+  .builder-wrapper {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .builder-selection {
+    flex: 0 0 60%;
+    min-width: 0;
+  }
+
+  .builder-summary {
+    flex: 0 0 40%;
+    min-width: 0;
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+  }
+
+  /* Mobile: Stack vertically, order summary at bottom with 20% height */
+  @media (max-width: 768px) {
+    .builder-wrapper {
+      flex-direction: column;
+    }
+
+    .builder-selection {
+      flex: 1;
+      width: 100%;
+    }
+
+    .builder-selection .glass {
+      padding: 24px !important;
+    }
+
+    .builder-summary {
+      flex: none;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      height: 20vh;
+      min-height: 200px;
+      max-height: 300px;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+      padding: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .builder-summary .glass {
+      padding: 16px !important;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .builder-container {
+      padding-bottom: calc(20vh + 20px);
+    }
+
+    .builder-container h1 {
+      font-size: 24px !important;
+    }
+
+    .builder-container p {
+      font-size: 14px !important;
+      margin-bottom: 24px !important;
+    }
   }
 
   .step-section {
@@ -123,14 +202,18 @@
   }
 
   .price-display {
-    position: sticky;
-    bottom: 0;
-    background: rgba(15, 23, 42, 0.98);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
     padding: 20px;
-    margin: 40px -24px -40px;
-    border-radius: 20px 20px 0 0;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .price-display {
+      margin-bottom: 16px;
+      padding: 12px;
+    }
   }
 
   .price-breakdown {
@@ -143,6 +226,32 @@
     padding: 8px 0;
     font-size: 14px;
     color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .price-row {
+      padding: 6px 0;
+      font-size: 12px;
+    }
+
+    .price-display h3 {
+      font-size: 16px !important;
+      margin-bottom: 12px !important;
+    }
+
+    #final-price {
+      font-size: 20px !important;
+      margin-top: 12px !important;
+      padding-top: 12px !important;
+    }
+
+    .summary-label {
+      font-size: 10px;
+    }
+
+    .summary-value {
+      font-size: 14px;
+    }
   }
 
   .price-row.total {
@@ -163,8 +272,15 @@
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
-    padding: 24px;
-    margin-top: 32px;
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .preview-summary {
+      margin-top: 16px;
+      padding: 16px;
+    }
   }
 
   .summary-item {
@@ -245,6 +361,23 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  @media (max-width: 768px) {
+    .order-form {
+      margin-top: 16px;
+      padding-top: 16px;
+    }
+
+    .form-input {
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    .btn-submit {
+      padding: 12px;
+      font-size: 14px;
+    }
+  }
+
   .form-group {
     margin-bottom: 16px;
   }
@@ -314,129 +447,140 @@
       Choose your style, see the price update in real-time
     </p>
 
-    <div class="glass" style="padding: 32px; margin-bottom: 24px;">
-      
-      <!-- STEP 1: Product Type -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">1</div>
-          <div>
-            <div class="step-title">Choose Product Type <span class="required-badge">Required</span></div>
-            <div class="step-subtitle">Select what you're building</div>
-          </div>
-        </div>
-        <div class="option-grid" id="product-type-grid">
-          <label class="option-card">
-            <input type="radio" name="productType" value="Earring" required>
-            <div class="option-card-content">
-              <div class="option-name">Earring</div>
+    <div class="builder-wrapper">
+      <!-- LEFT COLUMN: Selection (60% on desktop) -->
+      <div class="builder-selection">
+        <div class="glass" style="padding: 32px;">
+          
+          <!-- STEP 1: Product Type -->
+          <div class="step-section">
+            <div class="step-header">
+              <div class="step-number">1</div>
+              <div>
+                <div class="step-title">Choose Product Type <span class="required-badge">Required</span></div>
+                <div class="step-subtitle">Select what you're building</div>
+              </div>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Bracelet" required>
-            <div class="option-card-content">
-              <div class="option-name">Bracelet</div>
+            <div class="option-grid" id="product-type-grid">
+              <label class="option-card">
+                <input type="radio" name="productType" value="Earring" required>
+                <div class="option-card-content">
+                  <div class="option-name">Earring</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="productType" value="Bracelet" required>
+                <div class="option-card-content">
+                  <div class="option-name">Bracelet</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="productType" value="Necklace" required>
+                <div class="option-card-content">
+                  <div class="option-name">Necklace</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="productType" value="Choker" required>
+                <div class="option-card-content">
+                  <div class="option-name">Choker</div>
+                </div>
+              </label>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Necklace" required>
-            <div class="option-card-content">
-              <div class="option-name">Necklace</div>
+            <div class="validation-error" id="product-type-error">Please select a product type</div>
+          </div>
+
+          <!-- STEP 2: Twine -->
+          <div class="step-section">
+            <div class="step-header">
+              <div class="step-number">2</div>
+              <div>
+                <div class="step-title">Select Twine <span class="required-badge">Required</span></div>
+                <div class="step-subtitle">Choose your base twine (one only)</div>
+              </div>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="productType" value="Choker" required>
-            <div class="option-card-content">
-              <div class="option-name">Choker</div>
+            <div class="option-grid" id="twine-grid">
+              <!-- Will be populated by JavaScript -->
             </div>
-          </label>
+            <div class="validation-error" id="twine-error">Please select a twine</div>
+          </div>
+
+          <!-- STEP 3: Beads -->
+          <div class="step-section">
+            <div class="step-header">
+              <div class="step-number">3</div>
+              <div>
+                <div class="step-title">Select Beads <span class="optional-badge">Optional</span></div>
+                <div class="step-subtitle">Mix & match as many as you like</div>
+              </div>
+            </div>
+            <div class="option-grid" id="beads-grid">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- STEP 4: Ornaments -->
+          <div class="step-section">
+            <div class="step-header">
+              <div class="step-number">4</div>
+              <div>
+                <div class="step-title">Select Ornaments <span class="optional-badge">Optional</span></div>
+                <div class="step-subtitle">Add any number of ornaments</div>
+              </div>
+            </div>
+            <div class="option-grid" id="ornaments-grid">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+
         </div>
-        <div class="validation-error" id="product-type-error">Please select a product type</div>
       </div>
 
-      <!-- STEP 2: Twine -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">2</div>
-          <div>
-            <div class="step-title">Select Twine <span class="required-badge">Required</span></div>
-            <div class="step-subtitle">Choose your base twine (one only)</div>
+      <!-- RIGHT COLUMN: Order Summary (40% on desktop, 20% height on mobile) -->
+      <div class="builder-summary">
+        <div class="glass" style="padding: 24px;">
+          <!-- Price Display -->
+          <div class="price-display">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Price Breakdown</h3>
+            <div class="price-breakdown" id="price-breakdown">
+              <!-- Will be populated by JavaScript -->
+            </div>
+            <div style="text-align: center; font-size: 24px; font-weight: 800; color: var(--gold); margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);" id="final-price">
+              0 AED
+            </div>
+          </div>
+
+          <!-- Preview Summary -->
+          <div class="preview-summary" id="preview-summary" style="display: none;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Order Summary</h3>
+            <div id="summary-content">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Order Form -->
+          <div class="order-form" id="order-form-section" style="display: none;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Your Details</h3>
+            <form id="order-form" onsubmit="event.preventDefault(); submitCustomOrder()">
+              <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input type="text" name="name" class="form-input" placeholder="Full name" required>
+                <div class="validation-error" id="name-error">Please enter your name</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" name="phone" class="form-input" placeholder="Phone number" required>
+                <div class="validation-error" id="phone-error">Please enter your phone number</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Additional Notes (Optional)</label>
+                <textarea name="note" class="form-input" placeholder="Any preferences, pickup time, etc." rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn-submit" id="submit-btn">Send Order</button>
+            </form>
           </div>
         </div>
-        <div class="option-grid" id="twine-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        <div class="validation-error" id="twine-error">Please select a twine</div>
       </div>
-
-      <!-- STEP 3: Beads -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">3</div>
-          <div>
-            <div class="step-title">Select Beads <span class="optional-badge">Optional</span></div>
-            <div class="step-subtitle">Mix & match as many as you like</div>
-          </div>
-        </div>
-        <div class="option-grid" id="beads-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- STEP 4: Ornaments -->
-      <div class="step-section">
-        <div class="step-header">
-          <div class="step-number">4</div>
-          <div>
-            <div class="step-title">Select Ornaments <span class="optional-badge">Optional</span></div>
-            <div class="step-subtitle">Add any number of ornaments</div>
-          </div>
-        </div>
-        <div class="option-grid" id="ornaments-grid">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Price Display -->
-      <div class="price-display">
-        <div class="price-breakdown" id="price-breakdown">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        <div style="text-align: center; font-size: 28px; font-weight: 800; color: var(--gold);" id="final-price">
-          0 AED
-        </div>
-      </div>
-
-      <!-- Preview Summary -->
-      <div class="preview-summary" id="preview-summary" style="display: none;">
-        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Order Summary</h3>
-        <div id="summary-content">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Order Form -->
-      <div class="order-form" id="order-form-section" style="display: none;">
-        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Your Details</h3>
-        <form id="order-form" onsubmit="event.preventDefault(); submitCustomOrder()">
-          <div class="form-group">
-            <label class="form-label">Your Name</label>
-            <input type="text" name="name" class="form-input" placeholder="Full name" required>
-            <div class="validation-error" id="name-error">Please enter your name</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" name="phone" class="form-input" placeholder="Phone number" required>
-            <div class="validation-error" id="phone-error">Please enter your phone number</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Additional Notes (Optional)</label>
-            <textarea name="note" class="form-input" placeholder="Any preferences, pickup time, etc." rows="4"></textarea>
-          </div>
-          <button type="submit" class="btn-submit" id="submit-btn">Send Order</button>
-        </form>
-      </div>
-
     </div>
   </main>
 
