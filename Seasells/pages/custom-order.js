@@ -16,7 +16,7 @@ function getBasePath() {
 const BASE_PATH = getBasePath();
 
 // Pricing Configuration - Different prices based on product type
-const PRICING = {
+const PRICING = { 
   // Base prices by product type
   basePrice: {
     'Bracelet': 0,
@@ -163,6 +163,8 @@ function renderTwineOptions() {
     console.error('Twine grid not found');
     return;
   }
+  const productType = orderState.productType || 'Bracelet';
+  const twinePrice = PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
   const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
   const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
   grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => `
@@ -171,7 +173,7 @@ function renderTwineOptions() {
       <div class="option-card-content">
         <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'">
         <div class="option-name">${twine.name}</div>
-        <div class="option-price">+${PRICING.twine} AED</div>
+        <div class="option-price">+${twinePrice} AED</div>
       </div>
     </label>
   `).join('');
@@ -288,7 +290,8 @@ function setupEventListeners() {
   document.querySelectorAll('input[name="productType"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
       orderState.productType = e.target.value;
-      // Re-render beads and ornaments with new prices
+      // Re-render all options with new prices based on product type
+      renderTwineOptions();
       renderBeadsOptions();
       renderOrnamentsOptions();
       updatePrice();
