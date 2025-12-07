@@ -66,19 +66,20 @@ function loadProducts(){
     <div class="price" style="margin-left:auto">${p.price || '—'}</div>
   </div>
 
-  ${p.glow ? `
-    <div class="glow-tag" 
-         style="margin-top:8px;padding:6px 10px;border-radius:6px;
-         background:rgba(0,255,120,0.15);color:#5cff9d;
-         font-size:13px;font-weight:600;display:inline-block;">
-      ✨ Glow in the Dark
-    </div>
-  ` : ''}
+  <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+    ${p.glow ? `
+      <div class="glow-tag" 
+        style="padding:6px 10px;border-radius:6px;
+        background:rgba(0,255,120,0.15);color:#5cff9d;
+        font-size:13px;font-weight:600;display:inline-block;">
+        ✨ Glow in the Dark
+      </div>
+    ` : `<div></div>`}
 
-  <div style="margin-top:14px">
     <a class="btn" href="products/${p.id}/index.html">See More</a>
   </div>
 `;
+
       grid.appendChild(el);
     });
 
