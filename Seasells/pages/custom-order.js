@@ -26,6 +26,7 @@ const PRICING = {
     'glow-in-dark': 7
   },
   ornaments: {
+    'assorted': 2,
     'gold': 2,
     'silver': 2,
     'teddy': 3.5,
@@ -48,7 +49,6 @@ const PRODUCT_OPTIONS = {
     { name: 'Yellow Twine', image: 'Yellow_Twine.jpg', value: 'yellow' }
   ],
   beads: [
-    { name: 'Assorted Beads', image: 'Assorted_Ornaments.jpg', category: 'assorted', value: 'assorted' },
     { name: 'Solid Colored Beads', image: 'Solid_colored_Beads.jpg', category: 'solid', value: 'solid' },
     { name: 'Black Beads', image: 'Black_Beads.jpg', category: 'single-color', value: 'black' },
     { name: 'Blue Beads', image: 'blue_beads.jpg', category: 'single-color', value: 'blue' },
@@ -73,6 +73,7 @@ const PRODUCT_OPTIONS = {
     { name: 'Glow in Dark Beads', image: 'Assorted_Glow-In-Dark_Beads.jpg', category: 'glow-in-dark', value: 'glow-in-dark' }
   ],
   ornaments: [
+    { name: 'Assorted Ornaments', image: 'Assorted_Ornaments.jpg', category: 'assorted', value: 'assorted' },
     { name: 'Gold Ornament', image: 'Gold_Ornament.jpg', category: 'gold', value: 'gold' },
     { name: 'Silver Ornament', image: 'Silver_Ornament.jpg', category: 'silver', value: 'silver' },
     { name: 'Teddy Ornament', image: 'teddy_Ornament.jpg', category: 'teddy', value: 'teddy' },
@@ -336,6 +337,7 @@ function updatePrice() {
 
   ornamentCategories.forEach((data, category) => {
     const categoryLabels = {
+      'assorted': 'Assorted Ornaments',
       'gold': 'Gold Ornament',
       'silver': 'Silver Ornament',
       'teddy': 'Teddy Ornament',
@@ -519,6 +521,7 @@ function submitCustomOrder() {
   
   ornamentCategories.forEach((data, category) => {
     const categoryLabels = {
+      'assorted': 'Assorted Ornaments',
       'gold': 'Gold Ornament',
       'silver': 'Silver Ornament',
       'teddy': 'Teddy Ornament',
