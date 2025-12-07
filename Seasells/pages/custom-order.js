@@ -1,5 +1,20 @@
 // custom-order.js - Custom Order Builder Logic
 
+// Detect base path for GitHub Pages compatibility
+function getBasePath() {
+  // Check if we're on GitHub Pages (has /Seasells/ or repo name in path)
+  const path = window.location.pathname;
+  const match = path.match(/^\/([^\/]+)\//);
+  if (match && match[1] !== 'pages') {
+    // We're in a subdirectory (GitHub Pages repo)
+    return '/' + match[1];
+  }
+  // Local or root GitHub Pages
+  return '';
+}
+
+const BASE_PATH = getBasePath();
+
 // Pricing Configuration
 const PRICING = {
   twine: 4,
@@ -86,11 +101,17 @@ function initBuilder() {
 // Render Twine Options
 function renderTwineOptions() {
   const grid = document.getElementById('twine-grid');
+  if (!grid) {
+    console.error('Twine grid not found');
+    return;
+  }
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
   grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => `
     <label class="option-card">
       <input type="radio" name="twine" value="${twine.value}" required>
       <div class="option-card-content">
-        <img src="../assets/Customs/${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+        <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'">
         <div class="option-name">${twine.name}</div>
         <div class="option-price">+${PRICING.twine} AED</div>
       </div>
@@ -101,13 +122,19 @@ function renderTwineOptions() {
 // Render Beads Options
 function renderBeadsOptions() {
   const grid = document.getElementById('beads-grid');
+  if (!grid) {
+    console.error('Beads grid not found');
+    return;
+  }
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
   grid.innerHTML = PRODUCT_OPTIONS.beads.map(bead => {
     const price = PRICING.beads[bead.category] || 0;
     return `
       <label class="option-card">
         <input type="checkbox" name="beads" value="${bead.value}" data-category="${bead.category}">
         <div class="option-card-content">
-          <img src="../assets/Customs/${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+          <img src="${imagePath}${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='${fallbackPath}'">
           <div class="option-name">${bead.name}</div>
           <div class="option-price">+${price} AED</div>
         </div>
@@ -119,13 +146,19 @@ function renderBeadsOptions() {
 // Render Ornaments Options
 function renderOrnamentsOptions() {
   const grid = document.getElementById('ornaments-grid');
+  if (!grid) {
+    console.error('Ornaments grid not found');
+    return;
+  }
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
   grid.innerHTML = PRODUCT_OPTIONS.ornaments.map(ornament => {
     const price = PRICING.ornaments[ornament.category] || 0;
     return `
       <label class="option-card">
         <input type="checkbox" name="ornaments" value="${ornament.value}" data-category="${ornament.category}">
         <div class="option-card-content">
-          <img src="../assets/Customs/${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='../assets/logo.png'">
+          <img src="${imagePath}${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='${fallbackPath}'">
           <div class="option-name">${ornament.name}</div>
           <div class="option-price">+${price} AED</div>
         </div>
@@ -524,5 +557,16 @@ function submitCustomOrder() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', initBuilder);
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    initBuilder();
+  } catch (error) {
+    console.error('Error initializing custom order builder:', error);
+    // Show error message to user
+    const container = document.querySelector('.builder-container');
+    if (container) {
+      container.innerHTML = '<div class="glass" style="padding: 32px; text-align: center;"><h2>Error Loading Builder</h2><p>Please refresh the page or check the console for details.</p></div>';
+    }
+  }
+});
 
