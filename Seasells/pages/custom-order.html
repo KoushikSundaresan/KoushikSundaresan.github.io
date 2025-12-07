@@ -43,8 +43,60 @@
     align-self: flex-start;
   }
 
-  /* Mobile: Stack vertically, order summary at bottom with 20% height */
+  /* Drawer button for mobile */
+  .drawer-toggle {
+    display: none;
+  }
+
   @media (max-width: 768px) {
+    .drawer-toggle {
+      display: flex;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 200;
+      transition: all 0.3s ease;
+    }
+
+    .drawer-toggle:hover {
+      background: var(--accent-light);
+      transform: scale(1.1);
+    }
+
+    .drawer-toggle.active {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .drawer-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      border: 2px solid rgba(15, 23, 42, 0.98);
+    }
+
+    /* Mobile: Stack vertically, drawer for order summary */
     .builder-wrapper {
       flex-direction: column;
     }
@@ -66,10 +118,8 @@
       left: 0;
       right: 0;
       top: auto;
-      height: 20vh;
-      min-height: 200px;
-      max-height: 300px;
-      z-index: 100;
+      max-height: 85vh;
+      z-index: 150;
       background: rgba(15, 23, 42, 0.98);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -79,17 +129,23 @@
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .builder-summary.open {
+      transform: translateY(0);
     }
 
     .builder-summary .glass {
-      padding: 16px !important;
+      padding: 20px !important;
       background: transparent;
       border: none;
       box-shadow: none;
     }
 
     .builder-container {
-      padding-bottom: calc(20vh + 20px);
+      padding-bottom: 20px;
     }
 
     .builder-container h1 {
@@ -99,6 +155,25 @@
     .builder-container p {
       font-size: 14px !important;
       margin-bottom: 24px !important;
+    }
+
+    /* Drawer overlay */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 140;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .drawer-overlay.active {
+      display: block;
+      opacity: 1;
     }
   }
 
@@ -536,12 +611,20 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Order Summary (40% on desktop, 20% height on mobile) -->
-      <div class="builder-summary">
+      <!-- RIGHT COLUMN: Order Summary (40% on desktop, drawer on mobile) -->
+      <div class="drawer-overlay" id="drawer-overlay"></div>
+      <button class="drawer-toggle" id="drawer-toggle" aria-label="View Order Summary">
+        <span id="drawer-icon">📋</span>
+        <span class="drawer-badge" id="drawer-badge" style="display: none;">!</span>
+      </button>
+      <div class="builder-summary" id="builder-summary">
         <div class="glass" style="padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin: 0; color: var(--text-primary);">Order Summary</h3>
+            <button id="drawer-close" style="display: none; background: transparent; border: none; color: var(--text-secondary); font-size: 28px; cursor: pointer; padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s ease; line-height: 1;">×</button>
+          </div>
           <!-- Price Display -->
           <div class="price-display">
-            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Price Breakdown</h3>
             <div class="price-breakdown" id="price-breakdown">
               <!-- Will be populated by JavaScript -->
             </div>
@@ -586,6 +669,75 @@
 
   <script src="../email.js"></script>
   <script src="custom-order.js"></script>
+  <script>
+    // Drawer functionality for mobile
+    (function() {
+      const drawer = document.getElementById('builder-summary');
+      const toggle = document.getElementById('drawer-toggle');
+      const overlay = document.getElementById('drawer-overlay');
+      const closeBtn = document.getElementById('drawer-close');
+      const drawerBadge = document.getElementById('drawer-badge');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        if (closeBtn) {
+          closeBtn.style.display = 'flex';
+          closeBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.1)'; };
+          closeBtn.onmouseout = function() { this.style.background = 'transparent'; };
+        }
+        if (toggle) toggle.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        if (closeBtn) closeBtn.style.display = 'none';
+        if (toggle) toggle.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (toggle) {
+        toggle.addEventListener('click', function() {
+          if (drawer.classList.contains('open')) {
+            closeDrawer();
+          } else {
+            openDrawer();
+          }
+        });
+      }
+
+      if (overlay) {
+        overlay.addEventListener('click', closeDrawer);
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeDrawer);
+      }
+
+      // Show badge when order is ready
+      function updateDrawerBadge() {
+        const productType = document.querySelector('input[name="productType"]:checked');
+        const twine = document.querySelector('input[name="twine"]:checked');
+        if (productType && twine && drawerBadge) {
+          drawerBadge.style.display = 'flex';
+        } else if (drawerBadge) {
+          drawerBadge.style.display = 'none';
+        }
+      }
+
+      // Watch for changes
+      document.addEventListener('change', function(e) {
+        if (e.target.name === 'productType' || e.target.name === 'twine') {
+          updateDrawerBadge();
+        }
+      });
+
+      // Initialize
+      updateDrawerBadge();
+    })();
+  </script>
 </body>
 </html>
 
