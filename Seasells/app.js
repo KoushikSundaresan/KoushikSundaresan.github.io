@@ -58,17 +58,28 @@ function loadProducts(){
       el.className = 'glass card';
 
       el.innerHTML = `
-        <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}">
-        <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
-        <div class="meta">
-          <div class="pill">${p.category || 'Bracelet'}</div>
-          <div class="price">${p.price || '—'}</div>
-          <br>
-          ${p.glow ? `<div class="glow-tag">✨ Glow in the Dark</div>` : ''}
-        </div>
-        <div style="margin-top:12px">
-          <a class="btn" href="products/${p.id}/index.html">See More</a>
-        </div>
+  <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}">
+  <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
+
+  <div class="meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <div class="pill">${p.category || 'Bracelet'}</div>
+    <div class="price" style="margin-left:auto">${p.price || '—'}</div>
+  </div>
+
+  ${p.glow ? `
+    <div class="glow-tag" 
+         style="margin-top:8px;padding:6px 10px;border-radius:6px;
+         background:rgba(0,255,120,0.15);color:#5cff9d;
+         font-size:13px;font-weight:600;display:inline-block;">
+      ✨ Glow in the Dark
+    </div>
+  ` : ''}
+
+  <div style="margin-top:14px">
+    <a class="btn" href="products/${p.id}/index.html">See More</a>
+  </div>
+`;
+
       `;
 
       grid.appendChild(el);
