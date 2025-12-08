@@ -88,7 +88,13 @@ function loadProducts(){
       </div>
     ` : `<div></div>`}
 
-    <a class="btn" href="products/${p.id}/index.html" style="${p.sold ? 'opacity: 0.6; pointer-events: none;' : ''}">See More</a>
+    ${p.sold ? `
+      <button class="btn" onclick="requestRemake('${p.id}', '${p.name}', '${p.price}', '${p.category}')" style="background: var(--gold); color: #000; font-weight: 600;">
+        🔄 Request Remake
+      </button>
+    ` : `
+      <a class="btn" href="products/${p.id}/index.html">See More</a>
+    `}
   </div>
 `;
 
@@ -100,5 +106,22 @@ function loadProducts(){
     document.getElementById('product-grid').innerHTML = '<p class="center">No products found.</p>';
   }
 }
+
+// Request Remake Function for sold items
+function requestRemake(productId, productName, productPrice, productCategory) {
+  const subject = encodeURIComponent(`Remake Request - ${productName}`);
+  const body = encodeURIComponent(
+    `Hi Koushik,\n\n` +
+    `I would like to request a remake of:\n\n` +
+    `Product: ${productName}\n` +
+    `Category: ${productCategory}\n` +
+    `Price: ${productPrice}\n` +
+    `Product ID: ${productId}\n\n` +
+    `Please let me know when this will be available!\n\n` +
+    `Thank you!`
+  );
+  window.location.href = `mailto:koushikflink@gmail.com?subject=${subject}&body=${body}`;
+}
+
 document.addEventListener('DOMContentLoaded', loadProducts);
 
