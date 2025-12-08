@@ -1,643 +1,847 @@
-/* main.css - modern color system + globals */
-:root{
-  --deep: #1a1d2e;
-  --steel: #2d3748;
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --gold: #fbbf24;
-  --gold-light: #fcd34d;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --glass-bg: rgba(255,255,255,0.08);
-  --glass-border: rgba(255,255,255,0.12);
-  --glass-hover: rgba(255,255,255,0.12);
+// custom-order.js - Custom Order Builder Logic
+
+// Detect base path for GitHub Pages compatibility
+function getBasePath() {
+  // Check if we're on GitHub Pages (has /Seasells/ or repo name in path)
+  const path = window.location.pathname;
+  const match = path.match(/^\/([^\/]+)\//);
+  if (match && match[1] !== 'pages') {
+    // We're in a subdirectory (GitHub Pages repo)
+    return '/' + match[1];
+  }
+  // Local or root GitHub Pages
+  return '';
 }
 
-*{box-sizing:border-box}
+const BASE_PATH = getBasePath();
 
-body{
-  margin:0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.6;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-  padding-bottom: 60px;
-  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-x: hidden;
+// ============================================
+// PER-ITEM AVAILABILITY STATUS CONFIGURATION
+// ============================================
+// Set availability status for each item individually
+// Options: 'FLA' | 'FLBE' | 'PA' | 'OUT_OF_STOCK'
+// 'FLA' = Available for Full Length All (green)
+// 'FLBE' = Available for Full Length Bracelet/Earring (yellow)
+// 'PA' = Available for Partial All (orange)
+// 'OUT_OF_STOCK' = Out of Stock (red)
+
+const AVAILABILITY_CONFIG = {
+  'FLA': {
+    label: 'Available',
+    shortLabel: 'Available',
+    color: '#5cff9d',
+    bgColor: 'rgba(0,255,120,0.15)',
+    icon: '✅'
+  },
+  'FLBE': {
+    label: 'Bracelet/Earring Only',
+    shortLabel: 'FLBE',
+    color: '#ffd54f',
+    bgColor: 'rgba(255,213,79,0.15)',
+    icon: '⚠️'
+  },
+  'PA': {
+    label: 'Partial Only',
+    shortLabel: 'Partial',
+    color: '#ff9800',
+    bgColor: 'rgba(255,152,0,0.15)',
+    icon: '⚡'
+  },
+  'OUT_OF_STOCK': {
+    label: 'Out of Stock',
+    shortLabel: 'Out of Stock',
+    color: '#fca5a5',
+    bgColor: 'rgba(239,68,68,0.15)',
+    icon: '⏳'
+  }
+};
+
+// Default availability status (change to 'FLA'|'FLBE'|'PA'|'OUT_OF_STOCK' as needed)
+const AVAILABILITY_STATUS = 'FLA';
+
+// Helper: return per-item availability (falls back to global default)
+function getItemAvailability(type, value) {
+  return (ITEM_AVAILABILITY[type] && ITEM_AVAILABILITY[type][value]) || AVAILABILITY_STATUS;
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:none}
+// Helper: render a small availability badge HTML string
+function renderAvailabilityBadge(status) {
+  const cfg = AVAILABILITY_CONFIG[status] || AVAILABILITY_CONFIG['FLA'];
+  return `<div class="availability-badge" title="${cfg.label}" style="position:absolute; top:8px; left:8px; background:${cfg.bgColor}; color:${cfg.color}; padding:6px 8px; border-radius:6px; font-size:12px; font-weight:700;">${cfg.icon}</div>`;
 }
 
-.container{
-  max-width: 1200px;
-  margin: 32px auto;
-  padding: 0 24px;
+// Per-item availability mapping
+// Edit these values to change availability for each item
+const ITEM_AVAILABILITY = {
+  // Twine availability
+  twine: {
+    'black': 'FLA',
+    'blue': 'FLA',
+    'brown': 'FLA',
+    'orange': 'FLA',
+    'red': 'FLA',
+    'transparent': 'FLA',
+    'yellow': 'FLA'
+  },
+  // Beads availability (by value)
+  beads: {
+    'solid': 'FLA',
+    'black': 'FLA',
+    'blue': 'FLA',
+    'brown': 'FLA',
+    'cloud-pink': 'FLA',
+    'emerald': 'FLA',
+    'green-yellow': 'FLA',
+    'grey': 'FLA',
+    'grey-violet': 'FLA',
+    'olive': 'FLA',
+    'pastel-green': 'FLA',
+    'pink': 'FLA',
+    'purple': 'FLA',
+    'red': 'FLA',
+    'sap-green': 'FLA',
+    'sea': 'FLA',
+    'tan': 'FLA',
+    'violet': 'FLA',
+    'yellow': 'FLA',
+    'yellow-ochre': 'FLA',
+    'not-pearl': 'FLA',
+    'glow-in-dark': 'FLA'
+  },
+  // Ornaments availability (by value)
+  ornaments: {
+    'assorted': 'FLA',
+    'gold': 'FLA',
+    'silver': 'FLA',
+    'teddy': 'FLA',
+    'stone-gold': 'FLA',
+    'stone-silver': 'FLA'
+  }
+};
+
+// Pricing Configuration - Different prices based on product type
+const PRICING = { 
+  // Base prices by product type
+  basePrice: {
+    'Bracelet': 0,
+    'Necklace': 2,
+    'Earring': 1,
+    'Choker': 1
+  },
+  twine: {
+    'Bracelet': 4,
+    'Necklace': 5,
+    'Earring': 3,
+    'Choker': 4
+  },
+  beads: {
+    'Bracelet': {
+      'solid': 2,
+      'single-color': 3,
+      'not-pearl': 5,
+      'glow-in-dark': 7
+    },
+    'Necklace': {
+      'solid': 3,
+      'single-color': 4,
+      'not-pearl': 6,
+      'glow-in-dark': 8
+    },
+    'Earring': {
+      'solid': 1,
+      'single-color': 2,
+      'not-pearl': 3,
+      'glow-in-dark': 5
+    },
+    'Choker': {
+      'solid': 2,
+      'single-color': 3,
+      'not-pearl': 5,
+      'glow-in-dark': 7
+    }
+  },
+  ornaments: {
+    'Bracelet': {
+      'assorted': 2,
+      'gold': 2,
+      'silver': 2,
+      'teddy': 3.5,
+      'stone-gold': 5,
+      'stone-silver': 5
+    },
+    'Necklace': {
+      'assorted': 3,
+      'gold': 3,
+      'silver': 3,
+      'teddy': 4.5,
+      'stone-gold': 6,
+      'stone-silver': 6
+    },
+    'Earring': {
+      'assorted': 1,
+      'gold': 1,
+      'silver': 1,
+      'teddy': 2,
+      'stone-gold': 3,
+      'stone-silver': 3
+    },
+    'Choker': {
+      'assorted': 2,
+      'gold': 2,
+      'silver': 2,
+      'teddy': 3.5,
+      'stone-gold': 5,
+      'stone-silver': 5
+    }
+  },
+  minPrice: 15,
+  maxPrice: 30
+};
+
+// Product Options Data
+const PRODUCT_OPTIONS = {
+  twine: [
+    { name: 'Black Twine', image: 'Black_Twine.jpg', value: 'black' },
+    { name: 'Blue Twine', image: 'Blue_Twine.jpg', value: 'blue' },
+    { name: 'Brown Twine', image: 'Brown_Twine.jpg', value: 'brown' },
+    { name: 'Orange Twine', image: 'Orange_twine.jpg', value: 'orange' },
+    { name: 'Red Twine', image: 'Red_Twine.jpg', value: 'red' },
+    { name: 'Transparent Twine', image: 'Transparent_Twine.jpg', value: 'transparent' },
+    { name: 'Yellow Twine', image: 'Yellow_Twine.jpg', value: 'yellow' }
+  ],
+  beads: [
+    { name: 'Solid Colored Beads', image: 'Solid_colored_Beads.jpg', category: 'solid', value: 'solid' },
+    { name: 'Black Beads', image: 'Black_Beads.jpg', category: 'single-color', value: 'black' },
+    { name: 'Blue Beads', image: 'blue_beads.jpg', category: 'single-color', value: 'blue' },
+    { name: 'Brown Beads', image: 'Brown_Beads.jpg', category: 'single-color', value: 'brown' },
+    { name: 'Cloud Pink Beads', image: 'Cloud-Pink_Beads.jpg', category: 'single-color', value: 'cloud-pink' },
+    { name: 'Emerald Beads', image: 'Emerald_beads.jpg', category: 'single-color', value: 'emerald' },
+    { name: 'Green Yellow Beads', image: 'Green-Yellow_Beads.jpg', category: 'single-color', value: 'green-yellow' },
+    { name: 'Grey Beads', image: 'Grey_Beads.jpg', category: 'single-color', value: 'grey' },
+    { name: 'Grey Violet Beads', image: 'Grey-Violet_Beads.jpg', category: 'single-color', value: 'grey-violet' },
+    { name: 'Olive Beads', image: 'Olive_Beads.jpg', category: 'single-color', value: 'olive' },
+    { name: 'Pastel Green Beads', image: 'pastel-green_beads.jpg', category: 'single-color', value: 'pastel-green' },
+    { name: 'Pink Beads', image: 'Pink_Beads.jpg', category: 'single-color', value: 'pink' },
+    { name: 'Purple Beads', image: 'Purple_Beads.jpg', category: 'single-color', value: 'purple' },
+    { name: 'Red Beads', image: 'Red_Beads.jpg', category: 'single-color', value: 'red' },
+    { name: 'Sap Green Beads', image: 'Sap-Green_Beads.jpg', category: 'single-color', value: 'sap-green' },
+    { name: 'Sea Beads', image: 'Sea_Beads.jpg', category: 'single-color', value: 'sea' },
+    { name: 'Tan Beads', image: 'Tan_Beads.jpg', category: 'single-color', value: 'tan' },
+    { name: 'Violet Beads', image: 'Violet-beads.jpg', category: 'single-color', value: 'violet' },
+    { name: 'Yellow Beads', image: 'Yellow_Beads.jpg', category: 'single-color', value: 'yellow' },
+    { name: 'Yellow Ochre Beads', image: 'yellow-Ochre_beads.jpg', category: 'single-color', value: 'yellow-ochre' },
+    { name: 'Not Pearl Beads', image: 'not-Pearl_Beads.jpg', category: 'not-pearl', value: 'not-pearl' },
+    { name: 'Glow in Dark Beads', image: 'Assorted_Glow-In-Dark_Beads.jpg', category: 'glow-in-dark', value: 'glow-in-dark' }
+  ],
+  ornaments: [
+    { name: 'Assorted Ornaments', image: 'Assorted_Ornaments.jpg', category: 'assorted', value: 'assorted' },
+    { name: 'Gold Ornament', image: 'Gold_Ornament.jpg', category: 'gold', value: 'gold' },
+    { name: 'Silver Ornament', image: 'Silver_Ornament.jpg', category: 'silver', value: 'silver' },
+    { name: 'Teddy Ornament', image: 'teddy_Ornament.jpg', category: 'teddy', value: 'teddy' },
+    { name: 'Stone Gold Ornament', image: 'Stone-Gold_Ornament.jpg', category: 'stone-gold', value: 'stone-gold' },
+    { name: 'Stone Silver Ornament', image: 'Stone-Silver_Ornament.jpg', category: 'stone-silver', value: 'stone-silver' }
+  ]
+};
+
+// State Management
+let orderState = {
+  productType: null,
+  twine: null,
+  beads: [],
+  ornaments: []
+};
+
+// Initialize the builder
+function initBuilder() {
+  renderAvailabilityStatus();
+  renderTwineOptions();
+  renderBeadsOptions();
+  renderOrnamentsOptions();
+  setupEventListeners();
+  updatePrice();
 }
 
-/* glass base */
-.glass{
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 20px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+// Render Availability Status Banner
+function renderAvailabilityStatus() {
+  const statusEl = document.getElementById('availability-status');
+  if (!statusEl) return;
+  
+  const status = AVAILABILITY_STATUS;
+  const config = AVAILABILITY_CONFIG[status] || AVAILABILITY_CONFIG['FLA'];
+  
+  statusEl.style.background = config.bgColor;
+  statusEl.style.color = config.color;
+  statusEl.textContent = `${config.icon} ${config.label}`;
 }
 
-.glass:hover{
-  background: var(--glass-hover);
-  border-color: rgba(255, 255, 255, 0.18);
+// Render Twine Options
+function renderTwineOptions() {
+  const grid = document.getElementById('twine-grid');
+  if (!grid) {
+    console.error('Twine grid not found');
+    return;
+  }
+  const productType = orderState.productType || 'Bracelet';
+  const twinePrice = PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
+  grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => {
+    const availability = getItemAvailability('twine', twine.value);
+    const badge = renderAvailabilityBadge(availability);
+    const isUnavailable = availability === 'OUT_OF_STOCK';
+    return `
+    <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+      <input type="radio" name="twine" value="${twine.value}" required ${isUnavailable ? 'disabled' : ''}>
+      <div class="option-card-content" style="position: relative;">
+        ${badge}
+        <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
+        <div class="option-name">${twine.name}</div>
+        <div class="option-price">+${twinePrice} AED</div>
+      </div>
+    </label>
+  `;
+  }).join('');
 }
 
-/* header/navbar */
-.main-header {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: rgba(15, 23, 42, 0.98);
-  background: rgba(15, 23, 42, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 16px 0;
-  margin: 0;
-  margin-bottom: 24px;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header-nav {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-}
-
-.header-brand {
-  display: flex;
-  display: -webkit-flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.logo img{
-  height: 44px;
-  width: 44px;
-  object-fit: cover;
-  border-radius: 50%;
-  clip-path: circle(50%);
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
-}
-
-.brand-text {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-}
-
-.header-menu {
-  display: flex;
-  display: -webkit-flex;
-  gap: 8px;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.nav-link {
-  padding: 10px 20px;
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.nav-link:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 60%;
-  height: 2px;
-  background: var(--gold);
-  border-radius: 2px;
-  transition: transform 0.2s ease;
-}
-
-.nav-link:hover::after {
-  transform: translateX(-50%) scaleX(1);
-}
-
-.menu-btn{
-  font-size: 22px;
-  cursor: pointer;
-  color: var(--text-primary);
-  transition: transform 0.2s ease;
-  display: none;
-}
-
-.menu-btn:hover{
-  transform: scale(1.1);
-}
-
-/* banner */
-.banner{
-  margin: 24px 0;
-  padding: 32px;
-  border-radius: 20px;
-  text-align: center;
-  color: #1a1d2e;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  font-size: 18px;
-  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
-}
-
-/* grid */
-.grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.card{
-  padding: 20px;
-  border-radius: 20px;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: default;
-}
-
-.card:hover{
-  transform: translateY(-8px) scale(1.01);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-
-.card img{
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.4s ease;
-}
-
-.card:hover img{
-  transform: scale(1.05);
-}
-
-/* typography */
-h1, h2, h3{
-  margin: 0;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-}
-
-h1{
-  font-size: 32px;
-  color: var(--text-primary);
-  font-weight: 800;
-}
-
-h2{
-  font-size: 24px;
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-h3{
-  font-size: 20px;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-p{
-  color: var(--text-secondary);
-  font-size: 15px;
-  line-height: 1.6;
-  margin: 8px 0;
-}
-
-/* button */
-.btn{
-  display: inline-block;
-  padding: 12px 24px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-  color: white;
-  box-shadow: 
-    0 4px 14px rgba(99, 102, 241, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  cursor: pointer;
-}
-
-.btn:hover{
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 24px rgba(99, 102, 241, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
-}
-
-.btn:active{
-  transform: translateY(0);
-}
-
-/* product details */
-.product-wrap{
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  padding: 32px;
-}
-
-.product-media{
-  flex: 0 0 400px;
-}
-
-/* image carousel */
-.carousel-container{
-  position: relative;
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.carousel-wrapper{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-}
-
-.carousel-slides{
-  display: flex;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100%;
-}
-
-.carousel-slide{
-  min-width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.carousel-slide img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.carousel-btn{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  z-index: 10;
-  user-select: none;
-}
-
-.carousel-btn:hover{
-  background: rgba(0, 0, 0, 0.7);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-btn.prev{
-  left: 12px;
-}
-
-.carousel-btn.next{
-  right: 12px;
-}
-
-.carousel-btn:active{
-  transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-dots{
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
-}
-
-.carousel-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.carousel-dot.active{
-  background: var(--accent);
-  border-color: var(--accent-light);
-  width: 24px;
-  border-radius: 4px;
-}
-
-.carousel-dot:hover{
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.product-info{
-  flex: 1;
-  min-width: 280px;
-}
-
-.specs{
-  margin-top: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* small utility */
-.center{
-  text-align: center;
-}
-
-.pill{
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--gold-light);
-  letter-spacing: -0.01em;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* footer */
-.footer{
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 12px;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.footer .glass{
-  padding: 12px 20px;
-  pointer-events: auto;
-}
-
-/* responsive */
-@media(max-width: 768px){
-  .container{
-    padding: 0 16px;
-    margin: 24px auto;
+// Render Beads Options - Organized by price range
+function renderBeadsOptions() {
+  const grid = document.getElementById('beads-grid');
+  if (!grid) {
+    console.error('Beads grid not found');
+    return;
   }
   
-  /* Header mobile fixes */
-  .main-header {
-    padding: 12px 0;
+  const productType = orderState.productType || 'Bracelet';
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
+  
+  // Group beads by price category
+  const beadsByPrice = {
+    'solid': PRODUCT_OPTIONS.beads.filter(b => b.category === 'solid'),
+    'single-color': PRODUCT_OPTIONS.beads.filter(b => b.category === 'single-color'),
+    'not-pearl': PRODUCT_OPTIONS.beads.filter(b => b.category === 'not-pearl'),
+    'glow-in-dark': PRODUCT_OPTIONS.beads.filter(b => b.category === 'glow-in-dark')
+  };
+  
+  // Price order: solid (lowest) -> single-color -> not-pearl -> glow-in-dark (highest)
+  const priceOrder = ['solid', 'single-color', 'not-pearl', 'glow-in-dark'];
+  
+  let html = '';
+  
+  priceOrder.forEach(category => {
+    const beads = beadsByPrice[category];
+    if (beads.length === 0) return;
+    
+    const price = PRICING.beads[productType]?.[category] || 0;
+    const categoryLabels = {
+      'solid': 'Solid Colored Beads',
+      'single-color': 'Single-Color Beads',
+      'not-pearl': 'Not-Pearl Beads',
+      'glow-in-dark': 'Glow-in-Dark Beads'
+    };
+    
+    html += `
+      <div class="bead-price-group" style="grid-column: 1 / -1; margin-top: 24px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(99, 102, 241, 0.1); border-radius: 8px; border-left: 3px solid var(--accent);">
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 4px;">
+              ${categoryLabels[category]} - ${price} AED
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary);">
+              💡 Mix & match any colors within this price range for the same price
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px;">
+    `;
+    
+    beads.forEach(bead => {
+      const availability = getItemAvailability('beads', bead.value);
+      const badge = renderAvailabilityBadge(availability);
+      const isUnavailable = availability === 'OUT_OF_STOCK';
+      html += `
+        <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+          <input type="checkbox" name="beads" value="${bead.value}" data-category="${bead.category}" ${isUnavailable ? 'disabled' : ''}>
+          <div class="option-card-content" style="position: relative;">
+            ${badge}
+            <img src="${imagePath}${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
+            <div class="option-name">${bead.name}</div>
+            <div class="option-price" style="font-size: 11px; opacity: 0.8;">Same price</div>
+          </div>
+        </label>
+      `;
+    });
+    
+    html += `
+        </div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html;
+}
+
+// Render Ornaments Options
+function renderOrnamentsOptions() {
+  const grid = document.getElementById('ornaments-grid');
+  if (!grid) {
+    console.error('Ornaments grid not found');
+    return;
+  }
+  const productType = orderState.productType || 'Bracelet';
+  const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
+  const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
+  grid.innerHTML = PRODUCT_OPTIONS.ornaments.map(ornament => {
+    const price = PRICING.ornaments[productType]?.[ornament.category] || 0;
+    const availability = getItemAvailability('ornaments', ornament.value);
+    const badge = renderAvailabilityBadge(availability);
+    const isUnavailable = availability === 'OUT_OF_STOCK';
+    return `
+      <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+        <input type="checkbox" name="ornaments" value="${ornament.value}" data-category="${ornament.category}" ${isUnavailable ? 'disabled' : ''}>
+        <div class="option-card-content" style="position: relative;">
+          ${badge}
+          <img src="${imagePath}${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
+          <div class="option-name">${ornament.name}</div>
+          <div class="option-price">+${price} AED</div>
+        </div>
+      </label>
+    `;
+  }).join('');
+}
+
+// Setup Event Listeners (using event delegation to prevent duplicates)
+let listenersAttached = false;
+
+function setupEventListeners() {
+  // Prevent multiple event listener attachments
+  if (listenersAttached) return;
+  listenersAttached = true;
+
+  // Product Type
+  document.querySelectorAll('input[name="productType"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      orderState.productType = e.target.value;
+      // Re-render all options with new prices based on product type
+      renderTwineOptions();
+      renderBeadsOptions();
+      renderOrnamentsOptions();
+      updatePrice();
+      updatePreview();
+    });
+  });
+
+  // Use event delegation for dynamic elements
+  document.addEventListener('change', (e) => {
+    // Twine (radio - only one)
+    if (e.target.name === 'twine') {
+      orderState.twine = e.target.value;
+      updatePrice();
+      updatePreview();
+    }
+    
+    // Beads (checkboxes - multiple)
+    if (e.target.name === 'beads') {
+      const checked = Array.from(document.querySelectorAll('input[name="beads"]:checked'))
+        .map(cb => ({
+          value: cb.value,
+          category: cb.dataset.category,
+          name: PRODUCT_OPTIONS.beads.find(b => b.value === cb.value)?.name
+        }));
+      orderState.beads = checked;
+      updatePrice();
+      updatePreview();
+    }
+    
+    // Ornaments (checkboxes - multiple)
+    if (e.target.name === 'ornaments') {
+      const checked = Array.from(document.querySelectorAll('input[name="ornaments"]:checked'))
+        .map(cb => ({
+          value: cb.value,
+          category: cb.dataset.category,
+          name: PRODUCT_OPTIONS.ornaments.find(o => o.value === cb.value)?.name
+        }));
+      orderState.ornaments = checked;
+      updatePrice();
+      updatePreview();
+    }
+  });
+}
+
+// Calculate Raw Price
+// Only count each category once (multiple colors of same type = one price)
+// Prices vary based on product type
+function calculateRawPrice() {
+  let total = 0;
+  const productType = orderState.productType || 'Bracelet';
+
+  // Base price for product type
+  total += PRICING.basePrice[productType] || 0;
+
+  // Twine (required) - price varies by product type
+  if (orderState.twine) {
+    total += PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
+  }
+
+  // Beads: Group by category, only count each category once
+  const beadCategories = new Set();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.add(bead.category);
+      const price = PRICING.beads[productType]?.[bead.category] || 0;
+      total += price;
+    }
+  });
+
+  // Ornaments: Group by category, only count each category once
+  const ornamentCategories = new Set();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.add(ornament.category);
+      const price = PRICING.ornaments[productType]?.[ornament.category] || 0;
+      total += price;
+    }
+  });
+
+  return total;
+}
+
+// Apply Price Limits
+function applyPriceLimits(rawPrice) {
+  if (rawPrice < PRICING.minPrice) {
+    return PRICING.minPrice;
+  }
+  if (rawPrice > PRICING.maxPrice) {
+    return PRICING.maxPrice;
+  }
+  return rawPrice;
+}
+
+// Update Price Display
+function updatePrice() {
+  const rawPrice = calculateRawPrice();
+  const finalPrice = applyPriceLimits(rawPrice);
+  const breakdown = document.getElementById('price-breakdown');
+  const finalPriceEl = document.getElementById('final-price');
+
+  // Clear previous content first
+  if (!breakdown || !finalPriceEl) return;
+
+  // Build breakdown - group by category to show once per type
+  let breakdownHTML = '';
+  
+  const productType = orderState.productType || 'Bracelet';
+  
+  // Base price
+  const basePrice = PRICING.basePrice[productType] || 0;
+  if (basePrice > 0) {
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${productType} Base</span>
+        <span class="price-value">${basePrice} AED</span>
+      </div>
+    `;
   }
   
-  .header-nav {
-    flex-wrap: wrap;
-    gap: 16px;
+  if (orderState.twine) {
+    const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || 'Twine';
+    const twinePrice = PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${twineName}</span>
+        <span class="price-value">${twinePrice} AED</span>
+      </div>
+    `;
   }
-  
-  .header-brand {
-    flex: 1;
-    min-width: 0;
+
+  // Beads: Show each category only once, with count of colors
+  const beadCategories = new Map();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.set(bead.category, {
+        price: PRICING.beads[productType]?.[bead.category] || 0,
+        count: 1,
+        categoryName: bead.category
+      });
+    } else {
+      beadCategories.get(bead.category).count++;
+    }
+  });
+
+  beadCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'solid': 'Solid Colored Beads',
+      'single-color': 'Single-Color Beads',
+      'not-pearl': 'Not-Pearl Beads',
+      'glow-in-dark': 'Glow-in-Dark Beads'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.count > 1 ? ` (${data.count} colors mixed)` : '';
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${label}${countText}</span>
+        <span class="price-value">${data.price} AED</span>
+      </div>
+    `;
+  });
+
+  // Ornaments: Show each category only once, with count
+  const ornamentCategories = new Map();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.set(ornament.category, {
+        price: PRICING.ornaments[productType]?.[ornament.category] || 0,
+        count: 1,
+        categoryName: ornament.category
+      });
+    } else {
+      ornamentCategories.get(ornament.category).count++;
+    }
+  });
+
+  ornamentCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'assorted': 'Assorted Ornaments',
+      'gold': 'Gold Ornament',
+      'silver': 'Silver Ornament',
+      'teddy': 'Teddy Ornament',
+      'stone-gold': 'Stone Gold Ornament',
+      'stone-silver': 'Stone Silver Ornament'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.count > 1 ? ` (${data.count} selected)` : '';
+    breakdownHTML += `
+      <div class="price-row">
+        <span>${label}${countText}</span>
+        <span class="price-value">${data.price} AED</span>
+      </div>
+    `;
+  });
+
+  breakdownHTML += `
+    <div class="price-row">
+      <span>Subtotal</span>
+      <span class="price-value">${rawPrice.toFixed(1)} AED</span>
+    </div>
+  `;
+
+  if (rawPrice < PRICING.minPrice) {
+    breakdownHTML += `
+      <div class="price-row" style="color: var(--gold);">
+        <span>Minimum Price Applied</span>
+        <span class="price-value">+${(PRICING.minPrice - rawPrice).toFixed(1)} AED</span>
+      </div>
+    `;
+  } else if (rawPrice > PRICING.maxPrice) {
+    breakdownHTML += `
+      <div class="price-row" style="color: var(--gold);">
+        <span>Maximum Price Applied</span>
+        <span class="price-value">-${(rawPrice - PRICING.maxPrice).toFixed(1)} AED</span>
+      </div>
+    `;
   }
-  
-  .logo img {
-    height: 36px !important;
-    width: 36px !important;
-  }
-  
-  .brand-text {
-    font-size: 18px !important;
-  }
-  
-  .header-menu {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  
-  .nav-link {
-    font-size: 14px !important;
-    padding: 8px 16px !important;
-  }
-  
-  /* Product media mobile */
-  .product-media{
-    flex-basis: 100%;
-  }
-  
-  .product-wrap{
-    padding: 20px;
-    gap: 24px;
-    flex-direction: column;
-  }
-  
-  .carousel-btn{
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-  
-  .carousel-btn.prev{
-    left: 8px;
-  }
-  
-  .carousel-btn.next{
-    right: 8px;
-  }
-  
-  .carousel-dots{
-    padding: 12px;
-  }
-  
-  .grid{
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  h1{
-    font-size: 28px;
-  }
-  
-  h2{
-    font-size: 22px;
-  }
-  
-  /* Prevent horizontal overflow */
-  body {
-    overflow-x: hidden;
-    max-width: 100vw;
-  }
-  
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
+
+  breakdown.innerHTML = breakdownHTML;
+  finalPriceEl.textContent = `${finalPrice.toFixed(1)} AED`;
+
+  // Show preview and form if required fields are filled
+  if (orderState.productType && orderState.twine) {
+    document.getElementById('preview-summary').style.display = 'block';
+    document.getElementById('order-form-section').style.display = 'block';
+  } else {
+    document.getElementById('preview-summary').style.display = 'none';
+    document.getElementById('order-form-section').style.display = 'none';
   }
 }
 
-/* Extra small phones */
-@media(max-width: 480px){
-  .container{
-    padding: 0 12px;
-  }
+// Update Preview Summary
+function updatePreview() {
+  const summaryContent = document.getElementById('summary-content');
   
-  .nav-link {
-    font-size: 13px !important;
-    padding: 6px 12px !important;
+  if (!orderState.productType || !orderState.twine) {
+    return;
   }
-  
-  .brand-text {
-    font-size: 16px !important;
-  }
-  
-  .logo img {
-    height: 32px !important;
-    width: 32px !important;
-  }
+
+  const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || orderState.twine;
+  const beadsList = orderState.beads.length > 0 
+    ? orderState.beads.map(b => b.name).join(', ')
+    : 'None';
+  const ornamentsList = orderState.ornaments.length > 0
+    ? orderState.ornaments.map(o => o.name).join(', ')
+    : 'None';
+  const finalPrice = applyPriceLimits(calculateRawPrice());
+
+  summaryContent.innerHTML = `
+    <div class="summary-item">
+      <div class="summary-label">Product Type</div>
+      <div class="summary-value">${orderState.productType}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Twine</div>
+      <div class="summary-value">${twineName}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Beads</div>
+      <div class="summary-value">${beadsList}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Ornaments</div>
+      <div class="summary-value">${ornamentsList}</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Final Price</div>
+      <div class="summary-value" style="color: var(--gold); font-size: 24px;">${finalPrice.toFixed(1)} AED</div>
+    </div>
+  `;
 }
 
-/* Fix for all pages - prevent overflow */
-@media(max-width: 768px){
-  html, body {
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
+// Submit Custom Order
+function submitCustomOrder() {
+  // Validate required fields
+  if (!orderState.productType) {
+    document.getElementById('product-type-error').classList.add('show');
+    return;
+  } else {
+    document.getElementById('product-type-error').classList.remove('show');
+  }
+
+  if (!orderState.twine) {
+    document.getElementById('twine-error').classList.add('show');
+    return;
+  } else {
+    document.getElementById('twine-error').classList.remove('show');
+  }
+
+  const form = document.getElementById('order-form');
+  const formData = new FormData(form);
+  const name = formData.get('name');
+  const phone = formData.get('phone');
+  const note = formData.get('note') || '';
+
+  if (!name || !phone) {
+    if (!name) document.getElementById('name-error').classList.add('show');
+    if (!phone) document.getElementById('phone-error').classList.add('show');
+    return;
+  }
+
+  // Build order message
+  const twineName = PRODUCT_OPTIONS.twine.find(t => t.value === orderState.twine)?.name || orderState.twine;
+  const beadsList = orderState.beads.length > 0 
+    ? orderState.beads.map(b => b.name).join(', ')
+    : 'None';
+  const ornamentsList = orderState.ornaments.length > 0
+    ? orderState.ornaments.map(o => o.name).join(', ')
+    : 'None';
+  const finalPrice = applyPriceLimits(calculateRawPrice());
+  const rawPrice = calculateRawPrice();
+
+  // Build order message with correct pricing (categories counted once)
+  const productType = orderState.productType || 'Bracelet';
+  let orderMessage = `🎨 CUSTOM ORDER REQUEST\n\n`;
+  orderMessage += `Product Type: ${productType}\n`;
+  orderMessage += `Twine: ${twineName}\n`;
+  orderMessage += `Beads: ${beadsList}\n`;
+  orderMessage += `Ornaments: ${ornamentsList}\n\n`;
+  orderMessage += `Price Breakdown:\n`;
+  
+  // Base price
+  const basePrice = PRICING.basePrice[productType] || 0;
+  if (basePrice > 0) {
+    orderMessage += `  ${productType} Base: ${basePrice} AED\n`;
   }
   
-  /* Fix images */
-  img {
-    max-width: 100%;
-    height: auto;
+  const twinePrice = PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
+  orderMessage += `  ${twineName}: ${twinePrice} AED\n`;
+  
+  // Beads: Group by category
+  const beadCategories = new Map();
+  orderState.beads.forEach(bead => {
+    if (!beadCategories.has(bead.category)) {
+      beadCategories.set(bead.category, {
+        price: PRICING.beads[productType]?.[bead.category] || 0,
+        names: [bead.name]
+      });
+    } else {
+      beadCategories.get(bead.category).names.push(bead.name);
+    }
+  });
+  
+  beadCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'solid': 'Solid Colored Beads',
+      'single-color': 'Single-Color Beads',
+      'not-pearl': 'Not-Pearl Beads',
+      'glow-in-dark': 'Glow-in-Dark Beads'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.names.length > 1 ? ` (${data.names.length} colors mixed: ${data.names.join(', ')})` : '';
+    orderMessage += `  ${label}${countText}: ${data.price} AED\n`;
+  });
+  
+  // Ornaments: Group by category
+  const ornamentCategories = new Map();
+  orderState.ornaments.forEach(ornament => {
+    if (!ornamentCategories.has(ornament.category)) {
+      ornamentCategories.set(ornament.category, {
+        price: PRICING.ornaments[productType]?.[ornament.category] || 0,
+        names: [ornament.name]
+      });
+    } else {
+      ornamentCategories.get(ornament.category).names.push(ornament.name);
+    }
+  });
+  
+  ornamentCategories.forEach((data, category) => {
+    const categoryLabels = {
+      'assorted': 'Assorted Ornaments',
+      'gold': 'Gold Ornament',
+      'silver': 'Silver Ornament',
+      'teddy': 'Teddy Ornament',
+      'stone-gold': 'Stone Gold Ornament',
+      'stone-silver': 'Stone Silver Ornament'
+    };
+    const label = categoryLabels[category] || category;
+    const countText = data.names.length > 1 ? ` (${data.names.length})` : '';
+    orderMessage += `  ${label}${countText}: ${data.price} AED\n`;
+  });
+  
+  orderMessage += `  Subtotal: ${rawPrice.toFixed(1)} AED\n`;
+  
+  if (rawPrice < PRICING.minPrice) {
+    orderMessage += `  Minimum Applied: +${(PRICING.minPrice - rawPrice).toFixed(1)} AED\n`;
+  } else if (rawPrice > PRICING.maxPrice) {
+    orderMessage += `  Maximum Applied: -${(rawPrice - PRICING.maxPrice).toFixed(1)} AED\n`;
   }
   
-  /* Fix text overflow */
-  h1, h2, h3, p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  orderMessage += `\n💰 FINAL PRICE: ${finalPrice.toFixed(1)} AED\n\n`;
+  orderMessage += `Customer Details:\n`;
+  orderMessage += `  Name: ${name}\n`;
+  orderMessage += `  Phone: ${phone}\n`;
+  if (note) {
+    orderMessage += `  Note: ${note}\n`;
   }
-  
-  /* Fix buttons */
-  .btn {
-    width: 100%;
-    text-align: center;
-    padding: 14px 20px !important;
-  }
-  
-  /* Fix forms */
-  input, textarea {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box;
-  }
-  
-  /* Fix product cards */
-  .card {
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  /* Fix carousel on mobile */
-  .carousel-container {
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .carousel-wrapper {
-    width: 100%;
-  }
+
+  // Send via email (using existing email.js function)
+  const subject = encodeURIComponent(`Custom Order - ${orderState.productType}`);
+  const body = encodeURIComponent(orderMessage);
+  window.location.href = `mailto:koushikflink@gmail.com?subject=${subject}&body=${body}`;
+
+  // Alternative: WhatsApp (uncomment if preferred)
+  // const whatsappMessage = encodeURIComponent(orderMessage);
+  // window.open(`https://wa.me/YOUR_WHATSAPP_NUMBER?text=${whatsappMessage}`, '_blank');
 }
-.glow-tag {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  background: #00ffbb22;
-  color: #00ffc8;
-  border: 1px solid #00ffc8;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 8px #00ffc8aa, 0 0 16px #00ffc855 inset;
-  margin-top: 8px;
-  width: fit-content;
-}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    initBuilder();
+  } catch (error) {
+    console.error('Error initializing custom order builder:', error);
+    // Show error message to user
+    const container = document.querySelector('.builder-container');
+    if (container) {
+      container.innerHTML = '<div class="glass" style="padding: 32px; text-align: center;"><h2>Error Loading Builder</h2><p>Please refresh the page or check the console for details.</p></div>';
+    }
+  }
+});
+
