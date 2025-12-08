@@ -744,7 +744,7 @@ function submitCustomOrder() {
   orderState.beads.forEach(bead => {
     if (!beadCategories.has(bead.category)) {
       beadCategories.set(bead.category, {
-        price: PRICING.beads[bead.category] || 0,
+        price: PRICING.beads[productType]?.[bead.category] || 0,
         names: [bead.name]
       });
     } else {
@@ -769,7 +769,7 @@ function submitCustomOrder() {
   orderState.ornaments.forEach(ornament => {
     if (!ornamentCategories.has(ornament.category)) {
       ornamentCategories.set(ornament.category, {
-        price: PRICING.ornaments[ornament.category] || 0,
+        price: PRICING.ornaments[productType]?.[ornament.category] || 0,
         names: [ornament.name]
       });
     } else {
