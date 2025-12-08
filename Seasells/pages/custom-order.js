@@ -16,36 +16,92 @@ function getBasePath() {
 const BASE_PATH = getBasePath();
 
 // ============================================
-// AVAILABILITY STATUS CONFIGURATION
+// PER-ITEM AVAILABILITY STATUS CONFIGURATION
 // ============================================
-// Change this status to control availability across the custom builder
+// Set availability status for each item individually
 // Options: 'FLA' | 'FLBE' | 'PA' | 'OUT_OF_STOCK'
-const AVAILABILITY_STATUS = 'FLA'; // Change this value to update status
+// 'FLA' = Available for Full Length All (green)
+// 'FLBE' = Available for Full Length Bracelet/Earring (yellow)
+// 'PA' = Available for Partial All (orange)
+// 'OUT_OF_STOCK' = Out of Stock (red)
 
 const AVAILABILITY_CONFIG = {
   'FLA': {
-    label: 'Available for Full Length All',
+    label: 'Available',
+    shortLabel: 'Available',
     color: '#5cff9d',
     bgColor: 'rgba(0,255,120,0.15)',
     icon: '✅'
   },
   'FLBE': {
-    label: 'Available for Full Length Bracelet/Earring',
+    label: 'Bracelet/Earring Only',
+    shortLabel: 'FLBE',
     color: '#ffd54f',
     bgColor: 'rgba(255,213,79,0.15)',
     icon: '⚠️'
   },
   'PA': {
-    label: 'Available for Partial All',
+    label: 'Partial Only',
+    shortLabel: 'Partial',
     color: '#ff9800',
     bgColor: 'rgba(255,152,0,0.15)',
     icon: '⚡'
   },
   'OUT_OF_STOCK': {
     label: 'Out of Stock',
+    shortLabel: 'Out of Stock',
     color: '#fca5a5',
     bgColor: 'rgba(239,68,68,0.15)',
     icon: '⏳'
+  }
+};
+
+// Per-item availability mapping
+// Edit these values to change availability for each item
+const ITEM_AVAILABILITY = {
+  // Twine availability
+  twine: {
+    'black': 'FLA',
+    'blue': 'FLA',
+    'brown': 'FLA',
+    'orange': 'FLA',
+    'red': 'FLA',
+    'transparent': 'FLA',
+    'yellow': 'FLA'
+  },
+  // Beads availability (by value)
+  beads: {
+    'solid': 'FLA',
+    'black': 'FLA',
+    'blue': 'FLA',
+    'brown': 'FLA',
+    'cloud-pink': 'FLA',
+    'emerald': 'FLA',
+    'green-yellow': 'FLA',
+    'grey': 'FLA',
+    'grey-violet': 'FLA',
+    'olive': 'FLA',
+    'pastel-green': 'FLA',
+    'pink': 'FLA',
+    'purple': 'FLA',
+    'red': 'FLA',
+    'sap-green': 'FLA',
+    'sea': 'FLA',
+    'tan': 'FLA',
+    'violet': 'FLA',
+    'yellow': 'FLA',
+    'yellow-ochre': 'FLA',
+    'not-pearl': 'FLA',
+    'glow-in-dark': 'FLA'
+  },
+  // Ornaments availability (by value)
+  ornaments: {
+    'assorted': 'FLA',
+    'gold': 'FLA',
+    'silver': 'FLA',
+    'teddy': 'FLA',
+    'stone-gold': 'FLA',
+    'stone-silver': 'FLA'
   }
 };
 
@@ -215,16 +271,22 @@ function renderTwineOptions() {
   const twinePrice = PRICING.twine[productType] || PRICING.twine['Bracelet'] || 4;
   const imagePath = BASE_PATH ? `${BASE_PATH}/assets/Customs/` : '../assets/Customs/';
   const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
-  grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => `
-    <label class="option-card">
-      <input type="radio" name="twine" value="${twine.value}" required>
-      <div class="option-card-content">
-        <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'">
+  grid.innerHTML = PRODUCT_OPTIONS.twine.map(twine => {
+    const availability = getItemAvailability('twine', twine.value);
+    const badge = renderAvailabilityBadge(availability);
+    const isUnavailable = availability === 'OUT_OF_STOCK';
+    return `
+    <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+      <input type="radio" name="twine" value="${twine.value}" required ${isUnavailable ? 'disabled' : ''}>
+      <div class="option-card-content" style="position: relative;">
+        ${badge}
+        <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
         <div class="option-name">${twine.name}</div>
         <div class="option-price">+${twinePrice} AED</div>
       </div>
     </label>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // Render Beads Options - Organized by price range
@@ -280,11 +342,15 @@ function renderBeadsOptions() {
     `;
     
     beads.forEach(bead => {
+      const availability = getItemAvailability('beads', bead.value);
+      const badge = renderAvailabilityBadge(availability);
+      const isUnavailable = availability === 'OUT_OF_STOCK';
       html += `
-        <label class="option-card">
-          <input type="checkbox" name="beads" value="${bead.value}" data-category="${bead.category}">
-          <div class="option-card-content">
-            <img src="${imagePath}${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='${fallbackPath}'">
+        <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+          <input type="checkbox" name="beads" value="${bead.value}" data-category="${bead.category}" ${isUnavailable ? 'disabled' : ''}>
+          <div class="option-card-content" style="position: relative;">
+            ${badge}
+            <img src="${imagePath}${bead.image}" alt="${bead.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
             <div class="option-name">${bead.name}</div>
             <div class="option-price" style="font-size: 11px; opacity: 0.8;">Same price</div>
           </div>
@@ -313,11 +379,15 @@ function renderOrnamentsOptions() {
   const fallbackPath = BASE_PATH ? `${BASE_PATH}/assets/logo.png` : '../assets/logo.png';
   grid.innerHTML = PRODUCT_OPTIONS.ornaments.map(ornament => {
     const price = PRICING.ornaments[productType]?.[ornament.category] || 0;
+    const availability = getItemAvailability('ornaments', ornament.value);
+    const badge = renderAvailabilityBadge(availability);
+    const isUnavailable = availability === 'OUT_OF_STOCK';
     return `
-      <label class="option-card">
-        <input type="checkbox" name="ornaments" value="${ornament.value}" data-category="${ornament.category}">
-        <div class="option-card-content">
-          <img src="${imagePath}${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='${fallbackPath}'">
+      <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
+        <input type="checkbox" name="ornaments" value="${ornament.value}" data-category="${ornament.category}" ${isUnavailable ? 'disabled' : ''}>
+        <div class="option-card-content" style="position: relative;">
+          ${badge}
+          <img src="${imagePath}${ornament.image}" alt="${ornament.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
           <div class="option-name">${ornament.name}</div>
           <div class="option-price">+${price} AED</div>
         </div>
