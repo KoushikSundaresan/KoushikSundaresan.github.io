@@ -502,9 +502,23 @@
     <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 8px; text-align: center;">
       Build Your Custom Order
     </h1>
-    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">
+    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">
       Choose your style, see the price update in real-time
     </p>
+    
+    <!-- Availability Status Banner -->
+    <div id="availability-banner" style="max-width: 800px; margin: 0 auto 30px; padding: 16px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; text-align: center;">
+      <div id="availability-status" style="display: inline-block; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; margin-bottom: 8px;">
+        <!-- Will be populated by JavaScript -->
+      </div>
+      <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+        <strong>⏱️ Processing Times:</strong> Normal orders: 2-3 working days | Out of stock items: 2 working weeks
+      </div>
+    </div>
+
+    <div style="max-width: 800px; margin: 0 auto 30px; padding: 16px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+      <strong style="color: var(--gold);">📋 Availability Note:</strong> If an item shows as unavailable, it simply means it will take longer to prepare. We can still make it for you! Normal processing time is 2-3 working days. Items marked as out of stock may take up to 2 working weeks.
+    </div>
 
     <div class="builder-wrapper">
       <!-- LEFT COLUMN: Selection (60% on desktop) -->
