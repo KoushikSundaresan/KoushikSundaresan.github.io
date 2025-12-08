@@ -271,7 +271,7 @@ function renderAvailabilityStatus() {
   
   statusEl.style.background = config.bgColor;
   statusEl.style.color = config.color;
-  statusEl.textContent = `${config.icon} ${config.label}`;
+  statusEl.textContent = `${config.icon} ${config.label} (${config.shortLabel})`;
 }
 
 // Render Twine Options
@@ -293,10 +293,10 @@ function renderTwineOptions() {
     <label class="option-card" style="${isUnavailable ? 'opacity: 0.6;' : ''}">
       <input type="radio" name="twine" value="${twine.value}" required ${isUnavailable ? 'disabled' : ''}>
       <div class="option-card-content" style="position: relative;">
-        ${badge}
-        <img src="${imagePath}${twine.image}" alt="${twine.name}" class="option-image" onerror="this.src='${fallbackPath}'" style="${isUnavailable ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">
-        <div class="option-name">${twine.name}</div>
-        <div class="option-price">+${twinePrice} AED</div>
+        <div class="option-price" style="display: flex; align-items: center; gap: 8px;">
+          ${badge}
+          <span>+${twinePrice} AED</span>
+        </div>
       </div>
     </label>
   `;
