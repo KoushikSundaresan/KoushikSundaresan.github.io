@@ -15,6 +15,40 @@ function getBasePath() {
 
 const BASE_PATH = getBasePath();
 
+// ============================================
+// AVAILABILITY STATUS CONFIGURATION
+// ============================================
+// Change this status to control availability across the custom builder
+// Options: 'FLA' | 'FLBE' | 'PA' | 'OUT_OF_STOCK'
+const AVAILABILITY_STATUS = 'FLA'; // Change this value to update status
+
+const AVAILABILITY_CONFIG = {
+  'FLA': {
+    label: 'Available for Full Length All',
+    color: '#5cff9d',
+    bgColor: 'rgba(0,255,120,0.15)',
+    icon: '✅'
+  },
+  'FLBE': {
+    label: 'Available for Full Length Bracelet/Earring',
+    color: '#ffd54f',
+    bgColor: 'rgba(255,213,79,0.15)',
+    icon: '⚠️'
+  },
+  'PA': {
+    label: 'Available for Partial All',
+    color: '#ff9800',
+    bgColor: 'rgba(255,152,0,0.15)',
+    icon: '⚡'
+  },
+  'OUT_OF_STOCK': {
+    label: 'Out of Stock',
+    color: '#fca5a5',
+    bgColor: 'rgba(239,68,68,0.15)',
+    icon: '⏳'
+  }
+};
+
 // Pricing Configuration - Different prices based on product type
 const PRICING = { 
   // Base prices by product type
@@ -149,11 +183,25 @@ let orderState = {
 
 // Initialize the builder
 function initBuilder() {
+  renderAvailabilityStatus();
   renderTwineOptions();
   renderBeadsOptions();
   renderOrnamentsOptions();
   setupEventListeners();
   updatePrice();
+}
+
+// Render Availability Status Banner
+function renderAvailabilityStatus() {
+  const statusEl = document.getElementById('availability-status');
+  if (!statusEl) return;
+  
+  const status = AVAILABILITY_STATUS;
+  const config = AVAILABILITY_CONFIG[status] || AVAILABILITY_CONFIG['FLA'];
+  
+  statusEl.style.background = config.bgColor;
+  statusEl.style.color = config.color;
+  statusEl.textContent = `${config.icon} ${config.label}`;
 }
 
 // Render Twine Options
