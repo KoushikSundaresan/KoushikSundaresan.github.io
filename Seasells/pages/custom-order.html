@@ -506,18 +506,30 @@
       Choose your style, see the price update in real-time
     </p>
     
-    <!-- Availability Status Banner -->
-    <div id="availability-banner" style="max-width: 800px; margin: 0 auto 30px; padding: 16px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; text-align: center;">
-      <div id="availability-status" style="display: inline-block; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; margin-bottom: 8px;">
-        <!-- Will be populated by JavaScript -->
+    <!-- Availability Legend -->
+    <div style="max-width: 800px; margin: 0 auto 30px; padding: 16px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; text-align: center;">📋 Availability Status</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+          <span style="display: inline-block; padding: 4px 8px; border-radius: 6px; background: rgba(0,255,120,0.15); color: #5cff9d; font-weight: 600; font-size: 10px;">✅ Available</span>
+          <span style="color: var(--text-secondary);">Full length all</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+          <span style="display: inline-block; padding: 4px 8px; border-radius: 6px; background: rgba(255,213,79,0.15); color: #ffd54f; font-weight: 600; font-size: 10px;">⚠️ FLBE</span>
+          <span style="color: var(--text-secondary);">Bracelet/Earring only</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+          <span style="display: inline-block; padding: 4px 8px; border-radius: 6px; background: rgba(255,152,0,0.15); color: #ff9800; font-weight: 600; font-size: 10px;">⚡ Partial</span>
+          <span style="color: var(--text-secondary);">Partial only</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+          <span style="display: inline-block; padding: 4px 8px; border-radius: 6px; background: rgba(239,68,68,0.15); color: #fca5a5; font-weight: 600; font-size: 10px;">⏳ Out</span>
+          <span style="color: var(--text-secondary);">Out of stock</span>
+        </div>
       </div>
-      <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
-        <strong>⏱️ Processing Times:</strong> Normal orders: 2-3 working days | Out of stock items: 2 working weeks
+      <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; text-align: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <strong>⏱️ Processing Times:</strong> Available items: 2-3 working days | Out of stock: 2 working weeks
       </div>
-    </div>
-
-    <div style="max-width: 800px; margin: 0 auto 30px; padding: 16px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-      <strong style="color: var(--gold);">📋 Availability Note:</strong> If an item shows as unavailable, it simply means it will take longer to prepare. We can still make it for you! Normal processing time is 2-3 working days. Items marked as out of stock may take up to 2 working weeks.
     </div>
 
     <div class="builder-wrapper">
