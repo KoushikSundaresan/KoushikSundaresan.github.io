@@ -51,6 +51,16 @@ const productsData = [
     "desc": "Handmade stone beads on waxed cord.",
     "sold": false
   },
+  {
+    "id": "006",
+    "name": "Velvet",
+    "image": "1.jpg",
+    "price": "15 AED",
+    "glow": false,
+    "category": "Bracelet",
+    "desc": "Handmade stone beads on waxed cord.",
+    "sold": true
+  },
 ];
 
 function loadProducts(){
