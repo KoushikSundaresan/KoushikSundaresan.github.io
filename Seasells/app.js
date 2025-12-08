@@ -8,7 +8,8 @@ const productsData = [
     "price": "10 AED",
     "glow": false,
     "category": "Bracelet",
-    "desc": "Handmade stone beads on waxed cord."
+    "desc": "Handmade stone beads on waxed cord.",
+    "sold": false
   },
   {
     "id": "002",
@@ -17,7 +18,8 @@ const productsData = [
     "price": "10 AED",
     "glow": false,
     "category": "Bracelet",
-    "desc": "Handmade stone beads on waxed cord."
+    "desc": "Handmade stone beads on waxed cord.",
+    "sold": false
   },
   {
     "id": "003",
@@ -26,7 +28,8 @@ const productsData = [
     "price": "15 AED",
     "glow": true,
     "category": "Bracelet",
-    "desc": "Handmade - Glow in the Dark -  stone beads on waxed cord."
+    "desc": "Handmade - Glow in the Dark -  stone beads on waxed cord.",
+    "sold": false
   },
   {
     "id": "004",
@@ -35,7 +38,8 @@ const productsData = [
     "price": "10 AED",
     "glow": false,
     "category": "Bracelet",
-    "desc": "Handmade stone beads on waxed cord."
+    "desc": "Handmade stone beads on waxed cord.",
+    "sold": false
   },
   {
     "id": "005",
@@ -44,7 +48,8 @@ const productsData = [
     "price": "10 AED",
     "glow": false,
     "category": "Bracelet",
-    "desc": "Handmade stone beads on waxed cord."
+    "desc": "Handmade stone beads on waxed cord.",
+    "sold": false
   },
 ];
 
@@ -58,7 +63,14 @@ function loadProducts(){
       el.className = 'glass card';
 
       el.innerHTML = `
-  <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}">
+  <div style="position: relative;">
+    <img src="products/${p.id}/${p.image || '1.jpg'}" alt="${p.name}" style="${p.sold ? 'opacity: 0.4; filter: grayscale(70%);' : ''}">
+    ${p.sold ? `
+      <div style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.95); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+        Sold
+      </div>
+    ` : ''}
+  </div>
   <h3 style="margin:10px 0;color:var(--text-primary)">${p.name}</h3>
 
   <div class="meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -76,7 +88,7 @@ function loadProducts(){
       </div>
     ` : `<div></div>`}
 
-    <a class="btn" href="products/${p.id}/index.html">See More</a>
+    <a class="btn" href="products/${p.id}/index.html" style="${p.sold ? 'opacity: 0.6; pointer-events: none;' : ''}">See More</a>
   </div>
 `;
 
