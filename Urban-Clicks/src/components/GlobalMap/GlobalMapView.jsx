@@ -144,10 +144,22 @@ const GlobalMapView = ({ searchQuery, randomTrigger }) => {
                     >
                         <Popup className="urban-popup">
                             <div className="map-popup-group">
-                                <div className="popup-scroll-container">
+                                <div
+                                    className="popup-scroll-container"
+                                    onWheel={(e) => e.stopPropagation()}
+                                    onTouchStart={(e) => e.stopPropagation()}
+                                >
                                     {group.photos.map((photo, pIdx) => (
                                         <div key={pIdx} className="popup-slide">
-                                            <img src={photo.url} alt={photo.area} className="map-popup-image" />
+                                            <div className="image-placeholder">
+                                                <img
+                                                    src={photo.url}
+                                                    alt={photo.area}
+                                                    className="map-popup-image"
+                                                    loading="lazy"
+                                                    draggable="false"
+                                                />
+                                            </div>
                                             <div className="popup-meta">
                                                 <h4 className="photo-title">{photo.area}</h4>
                                                 <p className="photo-location">{photo.city}</p>
@@ -157,7 +169,7 @@ const GlobalMapView = ({ searchQuery, randomTrigger }) => {
                                 </div>
                                 {group.photos.length > 1 && (
                                     <div className="popup-count">
-                                        {group.photos.length} perspectives in this area
+                                        Slide to view {group.photos.length} perspectives
                                     </div>
                                 )}
                             </div>
